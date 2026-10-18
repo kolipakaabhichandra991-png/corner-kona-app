@@ -1,5 +1,5 @@
-import { LoginPage } from '@/components/pages/login-page'
+import { redirect } from 'next/navigation'
 
 export default function EnglishSubscribeRoute() {
-  return <LoginPage locale="en" />
+  redirect('/en/antar-yatra')
 }

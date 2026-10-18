@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Bell, Search } from 'lucide-react'
+import { Bell, Search, Sparkles } from 'lucide-react'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { categories } from '@/lib/content/seed'
@@ -60,11 +60,12 @@ export function MoreMenu({ locale, t, children }: { locale: Locale; t: Dictionar
             <ThemeToggle label={t.nav.toggleTheme} className="border" />
           </div>
           <Link
-            href={localePath(locale, '/login')}
+            href={localePath(locale, '/antar-yatra')}
             onClick={close}
-            className={cn(buttonVariants({ size: 'lg' }), 'rounded-full font-bold')}
+            className={cn(buttonVariants({ size: 'lg', variant: 'brand' }), 'rounded-full font-bold shadow-md')}
           >
-            {t.nav.login} / {t.nav.subscribe}
+            <Sparkles className="size-4 mr-2 text-amber-300" />
+            {t.nav.antarYatra} · {locale === 'hi' ? 'प्रीमियम मेंबरशिप' : 'Patron Membership'}
           </Link>
         </div>
       </SheetContent>

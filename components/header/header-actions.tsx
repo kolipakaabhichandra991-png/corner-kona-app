@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { Bell, Search, Check, Radio, Sparkles } from 'lucide-react'
+import { Bell, Search, Check, Radio, Sparkles, UserRound } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
@@ -125,16 +125,16 @@ export function HeaderActions({ locale, t }: { locale: Locale; t: Dictionary }) 
       {/* Theme Toggle */}
       <ThemeToggle label={t.nav.toggleTheme} className="hidden md:inline-flex" />
 
-      {/* Subscribe Button with Gradient and Glow */}
+      {/* Profile/Account Button */}
       <Link
-        href={localePath(locale, '/login')}
+        href={localePath(locale, '/profile')}
+        aria-label={t.nav.profile}
         className={cn(
-          buttonVariants({ variant: 'brand' }),
-          'hidden rounded-full font-bold shadow-md shadow-purple-500/20 hover:shadow-purple-500/35 transition-all hover:scale-105 active:scale-95 sm:inline-flex'
+          buttonVariants({ variant: 'ghost', size: 'icon' }),
+          'hidden rounded-full transition-transform hover:scale-110 active:scale-95 sm:inline-flex'
         )}
       >
-        <Sparkles className="size-3.5 mr-1" />
-        {t.nav.subscribe}
+        <UserRound className="size-5" aria-hidden="true" />
       </Link>
     </>
   )
