@@ -7,6 +7,9 @@ import { ThemeProvider } from './theme-provider'
 import { SiteHeader } from '@/components/header/site-header'
 import { MobileBottomNav } from '@/components/header/mobile-bottom-nav'
 import { SiteFooter } from './site-footer'
+import { AudioProvider } from '@/components/audio/audio-context'
+import { StickyAudioDock } from '@/components/audio/sticky-audio-dock'
+import { BilingualTranscriptSheet } from '@/components/audio/bilingual-transcript-sheet'
 
 const baloo = Baloo_2({ subsets: ['latin', 'devanagari'], variable: '--font-baloo', display: 'swap' })
 const mukta = Mukta({
@@ -24,18 +27,22 @@ export async function RootShell({ locale, children }: { locale: Locale; children
     <html lang={locale} className={`${baloo.variable} ${mukta.variable} bg-background`} suppressHydrationWarning>
       <body className="min-h-dvh antialiased" data-locale={locale}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <a
-            href="#main"
-            className="sr-only z-[60] rounded-md bg-primary px-4 py-2 font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
-          >
-            {t.nav.skip}
-          </a>
-          <SiteHeader locale={locale} t={t} latest={latest} categories={categories} />
-          <main id="main" className="pb-24 lg:pb-0">
-            {children}
-          </main>
-          <SiteFooter locale={locale} t={t} />
-          <MobileBottomNav locale={locale} t={t} />
+          <AudioProvider>
+            <a
+              href="#main"
+              className="sr-only z-[60] rounded-md bg-primary px-4 py-2 font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+            >
+              {t.nav.skip}
+            </a>
+            <SiteHeader locale={locale} t={t} latest={latest} categories={categories} />
+            <main id="main" className="pb-28 lg:pb-16">
+              {children}
+            </main>
+            <SiteFooter locale={locale} t={t} />
+            <StickyAudioDock locale={locale} />
+            <BilingualTranscriptSheet />
+            <MobileBottomNav locale={locale} t={t} />
+          </AudioProvider>
         </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

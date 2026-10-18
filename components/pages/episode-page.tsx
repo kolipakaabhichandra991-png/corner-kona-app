@@ -9,6 +9,7 @@ import { LikeButton } from '@/components/like-button'
 import { FormatChips } from '@/components/home/format-chips'
 import { EpisodeCard } from '@/components/home/episode-card'
 import { MediaStage } from './media-stage'
+import { EpisodePlayAction } from './episode-play-action'
 
 export async function EpisodePage({ locale, episode, view }: { locale: Locale; episode: Episode; view?: string }) {
   const t = getDictionary(locale)
@@ -62,6 +63,7 @@ export async function EpisodePage({ locale, episode, view }: { locale: Locale; e
             <LikeButton id={episode.id} label={locale === 'hi' ? 'पसंद करें' : 'Like'} size={18} />
           </div>
           <FormatChips locale={locale} t={t} formats={episode.formats} />
+          <EpisodePlayAction locale={locale} episode={episode} />
           {episode.premium && (
             <Link
               href={localePath(locale, '/antar-yatra')}
