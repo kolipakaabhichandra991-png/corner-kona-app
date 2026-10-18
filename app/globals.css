@@ -1,0 +1,209 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Keep theme tokens in CSS so the server and client render the same document. */
+@theme inline {
+  --font-sans: var(--font-mukta), 'Mukta', system-ui, sans-serif;
+  --font-display: var(--font-baloo), 'Baloo 2', system-ui, sans-serif;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+
+  --color-sports: var(--section-sports);
+  --color-entertainment: var(--section-entertainment);
+  --color-geopolitics: var(--section-geopolitics);
+  --color-bhakti: var(--section-bhakti);
+  --color-lifestyle: var(--section-lifestyle);
+  --color-antar: var(--section-antar-yatra);
+  --color-english: var(--section-english);
+  --color-live: var(--section-live);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+
+  --animate-glow: glow 2.8s ease-in-out infinite;
+  --animate-live: live 1.6s ease-out infinite;
+  --animate-wave: wave 1.1s ease-in-out infinite;
+  --animate-rise: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-pulse-scale: pulse-scale 2s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.5s linear infinite;
+
+  @keyframes shimmer {
+    from {
+      background-position: -200% 0;
+    }
+    to {
+      background-position: 200% 0;
+    }
+  }
+  @keyframes pulse-scale {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.04);
+    }
+  }
+  @keyframes glow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--section-antar-yatra) 0%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 18px 2px color-mix(in oklab, var(--section-antar-yatra) 55%, transparent);
+    }
+  }
+  @keyframes live {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+  @keyframes wave {
+    0%,
+    100% {
+      transform: scaleY(0.35);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+:root {
+  color-scheme: light;
+  --background: #F5F4F0;
+  --foreground: #14161C;
+  --card: #FFFFFF;
+  --card-foreground: #14161C;
+  --popover: #FFFFFF;
+  --popover-foreground: #14161C;
+  --primary: #FFC21A;
+  --primary-foreground: #14161C;
+  --secondary: #E9E7E1;
+  --secondary-foreground: #14161C;
+  --muted: #E9E7E1;
+  --muted-foreground: #5C5F68;
+  --accent: #E9E7E1;
+  --accent-foreground: #14161C;
+  --border: #DCD9D1;
+  --input: #DCD9D1;
+  --ring: #FFC21A;
+  --ink: #14161C;
+  --ink-foreground: #F5F4F0;
+  --section-sports: #FF4D2E;
+  --section-entertainment: #FF3D8B;
+  --section-geopolitics: #5B86FF;
+  --section-bhakti: #F29A2E;
+  --section-lifestyle: #14B386;
+  --section-antar-yatra: #F29A2E;
+  --section-english: #5B86FF;
+  --section-live: #FF2E2E;
+  --destructive: #d92d20;
+  --radius: 0.875rem;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #0E1015;
+  --foreground: #F1F0EC;
+  --card: #171A21;
+  --card-foreground: #F1F0EC;
+  --popover: #171A21;
+  --popover-foreground: #F1F0EC;
+  --primary: #FFC21A;
+  --primary-foreground: #14161C;
+  --secondary: #22262F;
+  --secondary-foreground: #F1F0EC;
+  --muted: #22262F;
+  --muted-foreground: #A2A5AE;
+  --accent: #22262F;
+  --accent-foreground: #F1F0EC;
+  --border: #2A2E38;
+  --input: #2A2E38;
+  --ring: #FFC21A;
+  --ink: #F1F0EC;
+  --ink-foreground: #0E1015;
+  --destructive: #f97066;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background font-sans text-foreground;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+}
+
+/* The "kona" (corner) signature: one clipped corner on featured surfaces. */
+@utility corner-cut {
+  clip-path: polygon(0 0, calc(100% - 2.5rem) 0, 100% 2.5rem, 100% 100%, 0 100%);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
