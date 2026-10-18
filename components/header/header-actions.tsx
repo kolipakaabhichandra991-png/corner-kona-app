@@ -7,6 +7,7 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from './theme-toggle'
+import { FloatingSearchTab } from '@/components/search/floating-search-tab'
 
 export function HeaderActions({ locale, t }: { locale: Locale; t: Dictionary }) {
   const isHi = locale === 'hi'
@@ -49,17 +50,8 @@ export function HeaderActions({ locale, t }: { locale: Locale; t: Dictionary }) 
 
   return (
     <>
-      {/* Search Button with hover animation */}
-      <Link
-        href={localePath(locale, '/search')}
-        aria-label={t.nav.search}
-        className={cn(
-          buttonVariants({ variant: 'ghost', size: 'icon' }),
-          'rounded-full transition-transform hover:scale-110 active:scale-95'
-        )}
-      >
-        <Search className="size-5" aria-hidden="true" />
-      </Link>
+      {/* Floating Instant Search Tab */}
+      <FloatingSearchTab locale={locale} t={t} />
 
       {/* Notifications Popover */}
       <div ref={notifRef} className="relative hidden sm:inline-block">
