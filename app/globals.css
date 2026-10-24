@@ -35,6 +35,10 @@
   --color-geopolitics: var(--section-geopolitics);
   --color-bhakti: var(--section-bhakti);
   --color-lifestyle: var(--section-lifestyle);
+  --color-news: var(--section-news);
+  --color-desh-ki-charcha: var(--section-desh-ki-charcha);
+  --color-gen-z: var(--section-gen-z);
+  --color-ck-special: var(--section-ck-special);
   --color-antar: var(--section-antar-yatra);
   --color-english: var(--section-english);
   --color-live: var(--section-live);
@@ -136,6 +140,10 @@
   --section-geopolitics: #5B86FF;
   --section-bhakti: #F29A2E;
   --section-lifestyle: #14B386;
+  --section-news: #6366F1;
+  --section-desh-ki-charcha: #0891B2;
+  --section-gen-z: #84CC16;
+  --section-ck-special: #E11D48;
   --section-antar-yatra: #F29A2E;
   --section-english: #5B86FF;
   --section-live: #FF2E2E;

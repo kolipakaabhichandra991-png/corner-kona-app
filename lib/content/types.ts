@@ -3,7 +3,15 @@ import type { Locale } from '@/lib/i18n'
 
 export type Localized = Record<Locale, string>
 
-export type CategoryKey = Extract<SectionKey, 'sports' | 'entertainment' | 'geopolitics' | 'bhakti' | 'lifestyle'>
+export type CategoryKey = Extract<
+  SectionKey,
+  'sports' | 'entertainment' | 'geopolitics' | 'bhakti' | 'lifestyle' | 'news' | 'deshKiCharcha' | 'genZ' | 'ckSpecial'
+>
+
+export interface SubCategory {
+  slug: string
+  name: Localized
+}
 
 export interface Category {
   key: CategoryKey
@@ -11,6 +19,7 @@ export interface Category {
   name: Localized
   blurb: Localized
   image: string
+  children?: SubCategory[]
 }
 
 export type MediaFormat = 'audio' | 'video' | 'short' | 'article'

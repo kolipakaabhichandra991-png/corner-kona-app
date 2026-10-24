@@ -4,11 +4,42 @@ const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000).toISOString(
 
 export const categories: Category[] = [
   {
-    key: 'sports',
-    slug: 'sports',
-    name: { hi: 'खेल', en: 'Sports' },
-    blurb: { hi: 'मैदान के अंदर और बाहर की कहानियाँ', en: 'Stories on and off the field' },
-    image: '/images/sports-cricket.png',
+    key: 'news',
+    slug: 'news',
+    name: { hi: 'न्यूज़', en: 'News' },
+    blurb: { hi: 'आज की हर बड़ी ख़बर', en: 'Every big story of the day' },
+    image: '/images/geo-summit.png',
+    children: [
+      { slug: 'top-10', name: { hi: 'टॉप 10', en: 'Top 10' } },
+      { slug: 'geo-politics', name: { hi: 'GEO-पॉलिटिक्स', en: 'Geo-Politics' } },
+      { slug: 'duniyabhar-ki-baatein', name: { hi: 'दुनियाभर की बातें', en: 'World Talk' } },
+      { slug: 'offbeat', name: { hi: 'ऑफबीट', en: 'Offbeat' } },
+    ],
+  },
+  {
+    key: 'deshKiCharcha',
+    slug: 'desh-ki-charcha',
+    name: { hi: 'देश की चर्चा', en: 'Nation Talk' },
+    blurb: { hi: 'देश भर की बहस और मुद्दे', en: 'Debates and issues across the country' },
+    image: '/images/geo-summit.png',
+    children: [
+      { slug: 'badi-khabar', name: { hi: 'बड़ी खबर', en: 'Big News' } },
+      { slug: 'sangeen-kona', name: { hi: 'संगीन कोना', en: 'Crime Corner' } },
+      { slug: 'ankahe-mudde', name: { hi: 'अनकहे-मुद्दे', en: 'Untold Issues' } },
+      { slug: 'baal-ki-khaal', name: { hi: 'बाल-की खाल', en: 'Deep Dive' } },
+    ],
+  },
+  {
+    key: 'genZ',
+    slug: 'gen-z-kona',
+    name: { hi: 'Gen-Z कोना', en: 'Gen-Z Corner' },
+    blurb: { hi: 'नई पीढ़ी, नई बातें', en: 'New generation, new conversations' },
+    image: '/images/life-chai.png',
+    children: [
+      { slug: 'delulu-solulu', name: { hi: 'Delulu-Solulu कॉर्नर', en: 'Delulu-Solulu Corner' } },
+      { slug: 'z-chaske', name: { hi: 'Z-चस्के', en: 'Z Cravings' } },
+      { slug: 'gen-y-millennials', name: { hi: 'Gen-Y और Millennials', en: 'Gen-Y & Millennials' } },
+    ],
   },
   {
     key: 'entertainment',
@@ -16,6 +47,42 @@ export const categories: Category[] = [
     name: { hi: 'मनोरंजन', en: 'Entertainment' },
     blurb: { hi: 'सिनेमा, संगीत और पॉप कल्चर', en: 'Cinema, music and pop culture' },
     image: '/images/ent-film.png',
+    children: [
+      { slug: 'cinema-talk', name: { hi: 'सिनेमा-टॉक', en: 'Cinema Talk' } },
+      { slug: 'tv-dose', name: { hi: 'टीवी-डोज़', en: 'TV Dose' } },
+      { slug: 'hollywood-desk', name: { hi: 'हॉलीवुड-डेस्क', en: 'Hollywood Desk' } },
+      { slug: 'regional-kona', name: { hi: 'रिजनल-कोना', en: 'Regional Corner' } },
+    ],
+  },
+  {
+    key: 'lifestyle',
+    slug: 'lifestyle',
+    name: { hi: 'लाइफ़स्टाइल', en: 'Daily Life' },
+    blurb: { hi: 'रोज़ की ज़िंदगी, थोड़ी बेहतर', en: 'Everyday life, a little better' },
+    image: '/images/life-chai.png',
+    children: [
+      { slug: 'cultural-gyan', name: { hi: 'कल्चरल-ज्ञान', en: 'Cultural Gyan' } },
+      { slug: 'paak-pakwan', name: { hi: 'पाक-पकवान', en: 'Food & Recipes' } },
+      { slug: 'ghumna-phirna', name: { hi: 'घूमना-फिरना', en: 'Travel' } },
+    ],
+  },
+  {
+    key: 'ckSpecial',
+    slug: 'ck-special',
+    name: { hi: 'CK स्पेशल', en: 'CK Special' },
+    blurb: { hi: 'सिर्फ़ कॉर्नर कोना पर', en: 'Only on Corner Kona' },
+    image: '/images/ent-film.png',
+    children: [
+      { slug: 'naari-ki-hai-baari', name: { hi: 'नारी की है बारी', en: 'Her Turn' } },
+      { slug: 'corner-exclusive', name: { hi: 'कॉर्नर एक्सक्लूज़िव', en: 'Corner Exclusive' } },
+    ],
+  },
+  {
+    key: 'sports',
+    slug: 'sports',
+    name: { hi: 'खेल', en: 'Sports' },
+    blurb: { hi: 'मैदान के अंदर और बाहर की कहानियाँ', en: 'Stories on and off the field' },
+    image: '/images/sports-cricket.png',
   },
   {
     key: 'geopolitics',
@@ -30,13 +97,6 @@ export const categories: Category[] = [
     name: { hi: 'भक्ति', en: 'Bhakti' },
     blurb: { hi: 'आस्था, परंपरा और शांति', en: 'Faith, tradition and calm' },
     image: '/images/bhakti-diya.png',
-  },
-  {
-    key: 'lifestyle',
-    slug: 'lifestyle',
-    name: { hi: 'लाइफ़स्टाइल', en: 'Daily Life' },
-    blurb: { hi: 'रोज़ की ज़िंदगी, थोड़ी बेहतर', en: 'Everyday life, a little better' },
-    image: '/images/life-chai.png',
   },
 ]
 
