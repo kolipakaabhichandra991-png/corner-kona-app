@@ -474,6 +474,35 @@
   ],
   "episodes": [
     {
+      "id": "ep-1792935512762",
+      "slug": "bjbjbjb-2762",
+      "kind": "podcast",
+      "title": {
+        "hi": "knkkn",
+        "en": "bjbjbjb"
+      },
+      "show": {
+        "hi": "कोना टॉक्स",
+        "en": "Kona Talks"
+      },
+      "category": "sports",
+      "durationMin": 35,
+      "image": "/images/hero-podcast.png",
+      "premium": false,
+      "language": "hi",
+      "publishedAt": "अभी-अभी • Just now",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/bjbjbjb-2762"
+        },
+        {
+          "format": "video",
+          "href": "/podcasts/bjbjbjb-2762?view=video"
+        }
+      ]
+    },
+    {
       "id": "ep-1",
       "slug": "gully-se-world-cup",
       "kind": "podcast",
@@ -877,18 +906,6 @@
   ],
   "shorts": [
     {
-      "id": "sh-1",
-      "slug": "kabaddi-raid",
-      "title": {
-        "hi": "वो रेड जिसने मैच पलट दिया",
-        "en": "The raid that flipped the match"
-      },
-      "category": "sports",
-      "durationSec": 42,
-      "image": "/images/short-kabaddi.png",
-      "views": "1.2M"
-    },
-    {
       "id": "sh-sports-2",
       "slug": "last-ball-six",
       "title": {
@@ -1127,30 +1144,6 @@
       "durationSec": 28,
       "image": "/images/short-streetfood.png",
       "views": "990K"
-    },
-    {
-      "id": "sh-desh-1",
-      "slug": "vocal-for-local-revolution",
-      "title": {
-        "hi": "लोकल ब्रांड्स जो बन गए ग्लोबल आइकन",
-        "en": "Local Indian brands going global"
-      },
-      "category": "deshKiCharcha",
-      "durationSec": 40,
-      "image": "/images/geo-summit.png",
-      "views": "760K"
-    },
-    {
-      "id": "sh-desh-2",
-      "slug": "young-farmers-smart-agriculture",
-      "title": {
-        "hi": "ड्रोन और AI से खेती करते युवा किसान",
-        "en": "Young farmers adopting drones & AI"
-      },
-      "category": "deshKiCharcha",
-      "durationSec": 46,
-      "image": "/images/short-kabaddi.png",
-      "views": "1.0M"
     }
   ],
   "hero": {

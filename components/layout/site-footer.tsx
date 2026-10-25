@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Lock } from 'lucide-react'
 import { Logo } from '@/components/brand/logo'
 import { brand } from '@/config/brand'
 import { categories } from '@/lib/content/seed'
@@ -27,13 +28,29 @@ export function SiteFooter({ locale, t }: { locale: Locale; t: Dictionary }) {
           <Link href={localePath(locale, '/antar-yatra')} className="text-muted-foreground hover:text-foreground">
             {t.nav.antarYatra}
           </Link>
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-1.5 font-medium text-muted-foreground hover:text-purple-400 transition-colors"
+          >
+            <Lock className="size-3.5" aria-hidden="true" />
+            <span>{locale === 'hi' ? 'एडमिन पोर्टल' : 'Admin Portal'}</span>
+          </Link>
         </nav>
       </div>
-      <div className="border-t">
-        <p className="mx-auto max-w-7xl px-4 py-4 text-xs text-muted-foreground md:px-6">
-          {'© '}
-          {new Date().getFullYear()} {brand.name}. {t.footer.rights}.
-        </p>
+      <div className="border-t border-border/50">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 text-xs text-muted-foreground md:px-6">
+          <p>
+            {'© '}
+            {new Date().getFullYear()} {brand.name}. {t.footer.rights}.
+          </p>
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-muted/40 px-3 py-1.5 text-[11px] font-semibold text-muted-foreground transition-all hover:text-purple-400 hover:border-purple-500/40 hover:bg-purple-500/10"
+          >
+            <Lock className="size-3" aria-hidden="true" />
+            <span>{locale === 'hi' ? 'एडमिन पोर्टल (Admin Portal)' : 'Admin Portal'}</span>
+          </Link>
+        </div>
       </div>
     </footer>
   )

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { Bell, Search, Check, Radio, Sparkles, UserRound, SlidersHorizontal } from 'lucide-react'
+import { Bell, Search, Check, Radio, Sparkles, UserRound } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
@@ -122,20 +122,6 @@ export function HeaderActions({ locale, t }: { locale: Locale; t: Dictionary }) 
 
       {/* Theme Toggle */}
       <ThemeToggle label={t.nav.toggleTheme} className="hidden md:inline-flex" />
-
-      {/* Admin Portal Button */}
-      <Link
-        href="/admin"
-        aria-label="Admin Portal"
-        title={isHi ? 'एडमिन पोर्टल (Admin Portal)' : 'Admin Portal'}
-        className={cn(
-          buttonVariants({ variant: 'ghost', size: 'sm' }),
-          'hidden items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold text-muted-foreground hover:text-purple-400 hover:bg-purple-500/10 transition-colors sm:inline-flex'
-        )}
-      >
-        <SlidersHorizontal className="size-3.5" aria-hidden="true" />
-        <span className="hidden lg:inline">Admin</span>
-      </Link>
 
       {/* Profile/Account Button */}
       <Link
