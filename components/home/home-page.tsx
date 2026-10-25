@@ -9,10 +9,10 @@ import { Carousel } from './carousel'
 import { SectionHeading } from './section-heading'
 import { EpisodeCard } from './episode-card'
 import { StoryCard } from './story-card'
-import { ShortCard } from './short-card'
 import { CategoryCard } from './category-card'
 import { AntarYatraPromo } from './antar-yatra-promo'
 import { Newsletter } from './newsletter'
+import { ShortsSection } from './shorts-section'
 
 export async function HomePage({ locale }: { locale: Locale }) {
   const t = getDictionary(locale)
@@ -39,14 +39,8 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </Carousel>
       </section>
 
-      <section aria-labelledby="shorts-h" className="flex flex-col gap-5">
-        <SectionHeading id="shorts-h" title={t.home.shorts} sub={t.home.shortsSub} href={localePath(locale, '/videos')} />
-        <Carousel label={t.home.shorts} prev={t.home.prev} next={t.home.next}>
-          {home.shorts.map((s) => (
-            <ShortCard key={s.id} locale={locale} short={s} />
-          ))}
-        </Carousel>
-      </section>
+      {/* Instagram Stories Experience for Shorts */}
+      <ShortsSection locale={locale} t={t} categories={home.categories} shorts={home.shorts} />
 
       <section aria-labelledby="stories-h" className="flex flex-col gap-5">
         <SectionHeading id="stories-h" title={t.home.stories} sub={t.home.storiesSub} />

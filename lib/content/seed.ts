@@ -386,6 +386,7 @@ export const stories: Story[] = [
 ]
 
 export const shorts: Short[] = [
+  // --- SPORTS (खेल-कूद) ---
   {
     id: 'sh-1',
     slug: 'kabaddi-raid',
@@ -396,6 +397,84 @@ export const shorts: Short[] = [
     views: '1.2M',
   },
   {
+    id: 'sh-sports-2',
+    slug: 'last-ball-six',
+    title: { hi: 'आख़िरी गेंद पर ऐतिहासिक छक्का', en: 'Historic six on the last ball' },
+    category: 'sports',
+    durationSec: 38,
+    image: '/images/sports-cricket.png',
+    views: '2.8M',
+  },
+  {
+    id: 'sh-sports-3',
+    slug: 'akhada-dangal',
+    title: { hi: 'मिट्टी के अखाड़े से नेशनल पोडियम तक', en: 'From mud akhada to national podium' },
+    category: 'sports',
+    durationSec: 45,
+    image: '/images/short-kabaddi.png',
+    views: '950K',
+  },
+
+  // --- ENTERTAINMENT (एंटरटेनमेंट) ---
+  {
+    id: 'sh-4',
+    slug: 'rooftop-dance',
+    title: { hi: 'छत पर डांस, शहर पर नज़र', en: 'Rooftop dance over the city' },
+    category: 'entertainment',
+    durationSec: 34,
+    image: '/images/short-dance.png',
+    views: '530K',
+  },
+  {
+    id: 'sh-ent-2',
+    slug: 'indie-cinema-bts',
+    title: { hi: 'लो बजट, हाई विज़न: सेट का राज़', en: 'Low budget, high vision: BTS secret' },
+    category: 'entertainment',
+    durationSec: 48,
+    image: '/images/ent-film.png',
+    views: '670K',
+  },
+  {
+    id: 'sh-ent-3',
+    slug: 'retro-dialogue-vibe',
+    title: { hi: '90 के दशक का वो बेमिसाल अंदाज़', en: 'That iconic 90s swagger' },
+    category: 'entertainment',
+    durationSec: 29,
+    image: '/images/short-dance.png',
+    views: '1.1M',
+  },
+
+  // --- GEN-Z (Gen-Z कोना) ---
+  {
+    id: 'sh-genz-1',
+    slug: 'delulu-to-solulu',
+    title: { hi: 'डिलुलु से सॉलुलु: असली Gen-Z गाइड', en: 'Delulu to Solulu: The Real Gen-Z Guide' },
+    category: 'genZ',
+    durationSec: 36,
+    image: '/images/hero-podcast.png',
+    views: '1.5M',
+  },
+  {
+    id: 'sh-genz-2',
+    slug: 'hostel-maggi-chaske',
+    title: { hi: 'रात के 2 बजे मैगी और एग्जाम की तैयारी', en: '2 AM Maggi & Exam Prep' },
+    category: 'genZ',
+    durationSec: 41,
+    image: '/images/life-chai.png',
+    views: '890K',
+  },
+  {
+    id: 'sh-genz-3',
+    slug: 'creator-speed-workflow',
+    title: { hi: '30 सेकंड में रील एडिट करने का फॉर्मूला', en: 'Formula to edit reels in 30 seconds' },
+    category: 'genZ',
+    durationSec: 44,
+    image: '/images/hero-podcast.png',
+    views: '1.9M',
+  },
+
+  // --- LIFESTYLE (लाइफस्टाइल) ---
+  {
     id: 'sh-2',
     slug: 'old-delhi-jalebi',
     title: { hi: 'पुरानी दिल्ली की 100 साल पुरानी जलेबी', en: 'Old Delhi’s 100-year-old jalebi' },
@@ -404,6 +483,26 @@ export const shorts: Short[] = [
     image: '/images/short-streetfood.png',
     views: '842K',
   },
+  {
+    id: 'sh-life-2',
+    slug: 'kulhad-chai-sukoon',
+    title: { hi: 'कुल्हड़ वाली चाय और बनारसी सुबह', en: 'Kulhad chai and a serene Banaras morning' },
+    category: 'lifestyle',
+    durationSec: 33,
+    image: '/images/life-chai.png',
+    views: '1.4M',
+  },
+  {
+    id: 'sh-life-3',
+    slug: 'weekend-hidden-trail',
+    title: { hi: 'भीड़ से दूर, प्रकृति की गोद में एक कोना', en: 'Away from the crowd: A peaceful corner' },
+    category: 'lifestyle',
+    durationSec: 49,
+    image: '/images/short-streetfood.png',
+    views: '720K',
+  },
+
+  // --- BHAKTI (भक्ति व संस्कृति) ---
   {
     id: 'sh-3',
     slug: 'ganga-aarti',
@@ -414,13 +513,102 @@ export const shorts: Short[] = [
     views: '2.4M',
   },
   {
-    id: 'sh-4',
-    slug: 'rooftop-dance',
-    title: { hi: 'छत पर डांस, शहर पर नज़र', en: 'Rooftop dance over the city' },
-    category: 'entertainment',
-    durationSec: 34,
-    image: '/images/short-dance.png',
-    views: '530K',
+    id: 'sh-bhakti-2',
+    slug: 'kashi-sunrise-bells',
+    title: { hi: 'काशी के घाटों पर भोर की घंटियाँ', en: 'Morning bells on the Ghats of Kashi' },
+    category: 'bhakti',
+    durationSec: 50,
+    image: '/images/bhakti-diya.png',
+    views: '1.8M',
+  },
+  {
+    id: 'sh-bhakti-3',
+    slug: 'vedic-chants-peace',
+    title: { hi: 'मन को शांत करने वाले वैदिक मंत्र', en: 'Vedic chants to calm your soul' },
+    category: 'bhakti',
+    durationSec: 45,
+    image: '/images/short-aarti.png',
+    views: '3.1M',
+  },
+
+  // --- NEWS (न्यूज़) ---
+  {
+    id: 'sh-news-1',
+    slug: 'budget-explained-short',
+    title: { hi: 'बजट का सीधा असर आपकी जेब पर', en: 'How the budget directly impacts your pocket' },
+    category: 'news',
+    durationSec: 45,
+    image: '/images/geo-summit.png',
+    views: '1.1M',
+  },
+  {
+    id: 'sh-news-2',
+    slug: 'bullet-train-progress-report',
+    title: { hi: 'हाई-स्पीड बुलेट ट्रेन: ग्राउंड रियलिटी', en: 'High-speed bullet train: Ground reality' },
+    category: 'news',
+    durationSec: 39,
+    image: '/images/geo-summit.png',
+    views: '920K',
+  },
+
+  // --- TECH-TALK (टेक-टॉक) ---
+  {
+    id: 'sh-tech-1',
+    slug: 'ai-smart-glasses-demo',
+    title: { hi: 'स्मार्टफ़ोन का विकल्प: AI ग्लासेज़?', en: 'Replacing smartphones: AI Smart Glasses?' },
+    category: 'techTalk',
+    durationSec: 43,
+    image: '/images/hero-podcast.png',
+    views: '830K',
+  },
+  {
+    id: 'sh-tech-2',
+    slug: 'digital-arrest-scam-alert',
+    title: { hi: 'डिजिटल अरेस्ट फ्रॉड से बचने के 3 नियम', en: '3 golden rules to avoid digital arrest frauds' },
+    category: 'techTalk',
+    durationSec: 37,
+    image: '/images/geo-summit.png',
+    views: '1.6M',
+  },
+
+  // --- SEHAT (सेहत) ---
+  {
+    id: 'sh-sehat-1',
+    slug: 'spine-stretch-desk-workers',
+    title: { hi: 'लैपटॉप पर 8 घंटे? ये 30s स्ट्रेच करें', en: '8 hours on laptop? Try this 30s stretch' },
+    category: 'sehat',
+    durationSec: 32,
+    image: '/images/life-chai.png',
+    views: '1.3M',
+  },
+  {
+    id: 'sh-sehat-2',
+    slug: 'morning-warm-water-habit',
+    title: { hi: 'सवेरे गुनगुने पानी के चमत्कारी फ़ायदे', en: 'Miraculous benefits of morning warm water' },
+    category: 'sehat',
+    durationSec: 28,
+    image: '/images/short-streetfood.png',
+    views: '990K',
+  },
+
+  // --- DESH KI CHARCHA (देश की चर्चा) ---
+  {
+    id: 'sh-desh-1',
+    slug: 'vocal-for-local-revolution',
+    title: { hi: 'लोकल ब्रांड्स जो बन गए ग्लोबल आइकन', en: 'Local Indian brands going global' },
+    category: 'deshKiCharcha',
+    durationSec: 40,
+    image: '/images/geo-summit.png',
+    views: '760K',
+  },
+  {
+    id: 'sh-desh-2',
+    slug: 'young-farmers-smart-agriculture',
+    title: { hi: 'ड्रोन और AI से खेती करते युवा किसान', en: 'Young farmers adopting drones & AI' },
+    category: 'deshKiCharcha',
+    durationSec: 46,
+    image: '/images/short-kabaddi.png',
+    views: '1.0M',
   },
 ]
 

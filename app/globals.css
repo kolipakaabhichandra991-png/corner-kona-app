@@ -215,6 +215,12 @@
   }
 }
 
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(0.8); opacity: 0; }
+  20% { opacity: 1; transform: translateY(-20px) scale(1.2); }
+  100% { transform: translateY(-220px) scale(1); opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
