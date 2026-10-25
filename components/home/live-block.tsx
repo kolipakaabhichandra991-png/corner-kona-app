@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Clapperboard, Newspaper, RotateCw } from 'lucide-react'
+import { ArrowRight, Clapperboard, Newspaper, Radio, RotateCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useLive } from '@/hooks/use-live'
@@ -18,22 +18,31 @@ export function LiveBlock({ locale, t }: { locale: Locale; t: Dictionary }) {
 
   return (
     <section aria-labelledby="live-h" aria-live="polite" className="mx-auto w-full max-w-7xl px-4 md:px-6">
-      <div className="rounded-3xl border bg-card p-5 md:p-6">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 id="live-h" className="flex items-center gap-2.5 text-xl font-extrabold md:text-2xl">
+      <div className="relative overflow-hidden rounded-3xl border border-red-500/25 bg-gradient-to-br from-card via-card to-red-500/5 p-5 md:p-6 shadow-xl backdrop-blur-md">
+        {/* Subtle live radar glow */}
+        <div className="pointer-events-none absolute -top-14 -right-14 size-48 rounded-full bg-red-500/15 blur-2xl" />
+
+        <div className="mb-4 flex items-center justify-between gap-3 relative">
+          <div className="flex items-center gap-2.5">
             <span className="relative flex size-3" aria-hidden="true">
-              {data?.active && <span className="absolute inline-flex size-full animate-live rounded-full bg-live" />}
+              {data?.active && <span className="absolute inline-flex size-full animate-ping rounded-full bg-live opacity-75" />}
               <span className="relative inline-flex size-3 rounded-full bg-live" />
             </span>
-            {t.home.liveTitle}
-          </h2>
+            <h2 id="live-h" className="flex items-center gap-2 text-xl font-extrabold md:text-2xl">
+              <span>{t.home.liveTitle}</span>
+              <span className="rounded-full bg-live/15 px-2.5 py-0.5 text-xs font-black text-live uppercase tracking-wider">
+                DESK
+              </span>
+            </h2>
+          </div>
+
           {data && (
             <Link
               href={localePath(locale, `/live/${data.slug}`)}
-              className="inline-flex items-center gap-1 text-sm font-bold hover:underline"
+              className="inline-flex items-center gap-1.5 rounded-full border border-red-500/30 bg-red-500/10 px-3.5 py-1.5 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-sm"
             >
-              {t.home.liveOpen}
-              <ArrowRight className="size-4" aria-hidden="true" />
+              <span>{t.home.liveOpen}</span>
+              <ArrowRight className="size-3.5" aria-hidden="true" />
             </Link>
           )}
         </div>
@@ -60,26 +69,28 @@ export function LiveBlock({ locale, t }: { locale: Locale; t: Dictionary }) {
 
         {data && (
           <>
-            <p className="mb-4 font-display text-lg leading-snug font-bold text-balance md:text-xl">{data.title[locale]}</p>
+            <p className="mb-4 font-display text-lg leading-snug font-bold text-balance md:text-xl text-foreground/90">
+              {data.title[locale]}
+            </p>
             <ol className="relative flex flex-col gap-4 border-l-2 border-live/40 pl-5">
               {data.entries.slice(0, 4).map((e) => (
-                <li key={e.id} className="relative">
-                  <span className="absolute top-1.5 -left-[1.6rem] size-2.5 rounded-full bg-live ring-4 ring-card" aria-hidden="true" />
+                <li key={e.id} className="relative group">
+                  <span className="absolute top-1.5 -left-[1.6rem] size-2.5 rounded-full bg-live ring-4 ring-card transition-transform group-hover:scale-125" aria-hidden="true" />
                   <time dateTime={e.at} suppressHydrationWarning className="text-xs font-bold text-live">
                     {timeAgo(e.at, locale)}
                   </time>
-                  {e.type === 'text' && <p className="mt-0.5 text-sm leading-relaxed">{e.body[locale]}</p>}
+                  {e.type === 'text' && <p className="mt-0.5 text-sm leading-relaxed text-foreground/90">{e.body[locale]}</p>}
                   {e.type === 'article' && e.story && (
                     <Link
                       href={localePath(locale, `/${e.story.category}/${e.story.slug}`)}
-                      className="mt-1.5 flex items-center gap-3 rounded-xl border p-2 transition-colors hover:bg-muted"
+                      className="mt-1.5 flex items-center gap-3 rounded-xl border border-border/70 bg-background/50 p-2.5 transition-all hover:bg-muted hover:border-primary/40 shadow-sm"
                     >
                       <span className="relative size-14 shrink-0 overflow-hidden rounded-lg">
                         <Image src={e.story.image || '/placeholder.svg'} alt="" fill sizes="56px" className="object-cover" />
                       </span>
                       <span className="min-w-0">
                         <span className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground uppercase">
-                          <Newspaper className="size-3" aria-hidden="true" />
+                          <Newspaper className="size-3 text-primary" aria-hidden="true" />
                           {t.home.read}
                         </span>
                         <span className="line-clamp-2 text-sm font-bold">{e.story.title[locale]}</span>
@@ -89,14 +100,14 @@ export function LiveBlock({ locale, t }: { locale: Locale; t: Dictionary }) {
                   {e.type === 'short' && e.short && (
                     <Link
                       href={localePath(locale, `/videos/${e.short.slug}`)}
-                      className="mt-1.5 flex items-center gap-3 rounded-xl border p-2 transition-colors hover:bg-muted"
+                      className="mt-1.5 flex items-center gap-3 rounded-xl border border-border/70 bg-background/50 p-2.5 transition-all hover:bg-muted hover:border-pink-500/40 shadow-sm"
                     >
                       <span className="relative h-16 w-9 shrink-0 overflow-hidden rounded-md">
                         <Image src={e.short.image || '/placeholder.svg'} alt="" fill sizes="36px" className="object-cover" />
                       </span>
                       <span className="min-w-0">
                         <span className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground uppercase">
-                          <Clapperboard className="size-3" aria-hidden="true" />
+                          <Clapperboard className="size-3 text-pink-500" aria-hidden="true" />
                           {t.home.shorts}
                         </span>
                         <span className="line-clamp-2 text-sm font-bold">{e.short.title[locale]}</span>

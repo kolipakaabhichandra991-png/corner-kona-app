@@ -1,8 +1,10 @@
 import { getHome } from '@/lib/content/repository'
 import { getDictionary, localePath, type Locale } from '@/lib/i18n'
+import { LiveTicker } from './live-ticker'
 import { Hero } from './hero'
 import { FormatEntries } from './format-entries'
 import { LiveBlock } from './live-block'
+import { GenZSpotlight } from './genz-spotlight'
 import { Carousel } from './carousel'
 import { SectionHeading } from './section-heading'
 import { EpisodeCard } from './episode-card'
@@ -17,11 +19,16 @@ export async function HomePage({ locale }: { locale: Locale }) {
   const home = await getHome(locale)
 
   return (
-    <div className="flex flex-col gap-12 pb-12 md:gap-16">
+    <div className="flex flex-col gap-10 pb-16 md:gap-14">
+      <LiveTicker locale={locale} />
+
       <Hero locale={locale} t={t} hero={home.hero} />
+
       <FormatEntries locale={locale} t={t} />
 
       <LiveBlock locale={locale} t={t} />
+
+      <GenZSpotlight locale={locale} />
 
       <section aria-labelledby="episodes-h" className="flex flex-col gap-5">
         <SectionHeading id="episodes-h" title={t.home.episodes} sub={t.home.episodesSub} href={localePath(locale, '/podcasts')} />

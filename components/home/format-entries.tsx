@@ -10,43 +10,45 @@ export function FormatEntries({ locale, t }: { locale: Locale; t: Dictionary }) 
       label: t.nav.podcastsLong,
       sub: t.home.episodesSub,
       icon: AudioWaveform,
-      className: 'bg-primary text-primary-foreground',
+      className: 'bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 text-white shadow-xl shadow-purple-600/20 hover:shadow-purple-600/35 border border-purple-400/20',
     },
     {
       href: localePath(locale, '/videos'),
       label: t.nav.videos,
       sub: t.home.shortsSub,
       icon: CirclePlay,
-      className: 'bg-ink text-ink-foreground',
+      className: 'bg-gradient-to-br from-pink-600 via-rose-600 to-red-700 text-white shadow-xl shadow-pink-600/20 hover:shadow-pink-600/35 border border-pink-400/20',
     },
     {
       href: localePath(locale, '/antar-yatra'),
       label: t.nav.antarYatra,
-      sub: t.nav.premium,
+      sub: locale === 'hi' ? 'विशेष पॉडकास्ट मेंबरशिप' : 'Exclusive Patron Access',
       icon: Sparkles,
-      className: 'bg-antar/15 text-foreground ring-1 ring-antar/50 ring-inset',
+      className: 'bg-gradient-to-br from-amber-500 via-orange-600 to-amber-700 text-white shadow-xl shadow-amber-500/20 hover:shadow-amber-500/35 border border-amber-300/30',
     },
   ]
 
   return (
     <nav aria-label="Formats" className="mx-auto -mt-6 w-full max-w-7xl px-4 md:-mt-8 md:px-6">
-      <ul className="grid grid-cols-3 gap-2 sm:gap-3">
+      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         {entries.map(({ href, label, sub, icon: Icon, className }) => (
           <li key={href}>
             <Link
               href={href}
               className={cn(
-                'group flex h-full flex-col gap-3 rounded-2xl p-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:scale-95 focus-visible:ring-2 focus-visible:ring-ring sm:flex-row sm:items-center sm:p-4 cursor-pointer',
+                'group flex h-full flex-row items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:-translate-y-1.5 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring cursor-pointer backdrop-blur-md',
                 className,
               )}
             >
-              <span className="flex items-center justify-between sm:contents">
-                <Icon className="size-6 shrink-0 transition-transform duration-300 group-hover:scale-110 sm:size-7" aria-hidden="true" />
-                <ArrowUpRight className="size-4 opacity-60 transition-all duration-300 group-hover:rotate-45 group-hover:scale-125 group-hover:opacity-100 sm:order-last sm:ml-auto" aria-hidden="true" />
+              <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-white/20 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                <Icon className="size-6 shrink-0" aria-hidden="true" />
               </span>
-              <span className="flex min-w-0 flex-col">
-                <span className="font-display text-sm leading-tight font-bold sm:text-base">{label}</span>
-                <span className="hidden truncate text-xs opacity-70 sm:block">{sub}</span>
+              <span className="flex min-w-0 flex-1 flex-col">
+                <span className="font-display text-base leading-tight font-extrabold sm:text-lg">{label}</span>
+                <span className="truncate text-xs text-white/80 font-medium">{sub}</span>
+              </span>
+              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-white/10 transition-all duration-300 group-hover:rotate-45 group-hover:scale-110 group-hover:bg-white/25">
+                <ArrowUpRight className="size-4" aria-hidden="true" />
               </span>
             </Link>
           </li>
