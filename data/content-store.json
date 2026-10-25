@@ -1,0 +1,1211 @@
+{
+  "categories": [
+    {
+      "key": "news",
+      "slug": "news",
+      "name": {
+        "hi": "न्यूज़",
+        "en": "News"
+      },
+      "blurb": {
+        "hi": "आज की हर बड़ी ख़बर",
+        "en": "Every big story of the day"
+      },
+      "image": "/images/geo-summit.png",
+      "children": [
+        {
+          "slug": "top-10",
+          "name": {
+            "hi": "टॉप 10",
+            "en": "Top 10"
+          }
+        },
+        {
+          "slug": "geo-politics",
+          "name": {
+            "hi": "GEO-पॉलिटिक्स",
+            "en": "Geo-Politics"
+          }
+        },
+        {
+          "slug": "duniyabhar-ki-baatein",
+          "name": {
+            "hi": "दुनियाभर की बातें",
+            "en": "World Talk"
+          }
+        },
+        {
+          "slug": "offbeat",
+          "name": {
+            "hi": "ऑफबीट",
+            "en": "Offbeat"
+          }
+        }
+      ]
+    },
+    {
+      "key": "deshKiCharcha",
+      "slug": "desh-ki-charcha",
+      "name": {
+        "hi": "देश की चर्चा",
+        "en": "Nation Talk"
+      },
+      "blurb": {
+        "hi": "देश भर की बहस और मुद्दे",
+        "en": "Debates and issues across the country"
+      },
+      "image": "/images/geo-summit.png",
+      "children": [
+        {
+          "slug": "badi-khabar",
+          "name": {
+            "hi": "बड़ी खबर",
+            "en": "Big News"
+          }
+        },
+        {
+          "slug": "sangeen-kona",
+          "name": {
+            "hi": "संगीन कोना",
+            "en": "Crime Corner"
+          }
+        },
+        {
+          "slug": "ankahe-mudde",
+          "name": {
+            "hi": "अनकहे-मुद्दे",
+            "en": "Untold Issues"
+          }
+        },
+        {
+          "slug": "baal-ki-khaal",
+          "name": {
+            "hi": "बाल-की खाल",
+            "en": "Deep Dive"
+          }
+        }
+      ]
+    },
+    {
+      "key": "genZ",
+      "slug": "gen-z-kona",
+      "name": {
+        "hi": "Gen-Z कोना",
+        "en": "Gen-Z Corner"
+      },
+      "blurb": {
+        "hi": "नई पीढ़ी, नई बातें और इंटरनेट ट्रेंड्स",
+        "en": "New generation, conversations & internet trends"
+      },
+      "image": "/images/life-chai.png",
+      "children": [
+        {
+          "slug": "latest-delulu",
+          "name": {
+            "hi": "लेटेस्ट-Delulu",
+            "en": "Latest Delulu"
+          }
+        },
+        {
+          "slug": "z-chaske",
+          "name": {
+            "hi": "Z-चस्के",
+            "en": "Z Cravings"
+          }
+        },
+        {
+          "slug": "solulu-corner",
+          "name": {
+            "hi": "Solulu-कॉर्नर",
+            "en": "Solulu Corner"
+          }
+        },
+        {
+          "slug": "gen-y-ki-awaaz",
+          "name": {
+            "hi": "Gen-Y की आवाज",
+            "en": "Gen-Y's Voice"
+          }
+        },
+        {
+          "slug": "millennials-spot",
+          "name": {
+            "hi": "Millennials-स्पॉट",
+            "en": "Millennials Spot"
+          }
+        }
+      ]
+    },
+    {
+      "key": "entertainment",
+      "slug": "entertainment",
+      "name": {
+        "hi": "एंटरटेनमेंट",
+        "en": "Entertainment"
+      },
+      "blurb": {
+        "hi": "सिनेमा, संगीत और पॉप कल्चर",
+        "en": "Cinema, music and pop culture"
+      },
+      "image": "/images/ent-film.png",
+      "children": [
+        {
+          "slug": "cinema-talk",
+          "name": {
+            "hi": "सिनेमा-टॉक",
+            "en": "Cinema Talk"
+          }
+        },
+        {
+          "slug": "tv-dose",
+          "name": {
+            "hi": "टीवी-डोज़",
+            "en": "TV Dose"
+          }
+        },
+        {
+          "slug": "hollywood-desk",
+          "name": {
+            "hi": "हॉलीवुड-डेस्क",
+            "en": "Hollywood Desk"
+          }
+        },
+        {
+          "slug": "regional-kona",
+          "name": {
+            "hi": "रिजनल-कोना",
+            "en": "Regional Corner"
+          }
+        }
+      ]
+    },
+    {
+      "key": "lifestyle",
+      "slug": "lifestyle",
+      "name": {
+        "hi": "लाइफस्टाइल",
+        "en": "Lifestyle"
+      },
+      "blurb": {
+        "hi": "रोज़ की ज़िंदगी, थोड़ी बेहतर",
+        "en": "Everyday life, a little better"
+      },
+      "image": "/images/life-chai.png",
+      "children": [
+        {
+          "slug": "cultural-gyan",
+          "name": {
+            "hi": "कल्चरल-ज्ञान",
+            "en": "Cultural Gyan"
+          }
+        },
+        {
+          "slug": "paak-pakwan",
+          "name": {
+            "hi": "पाक-पकवान",
+            "en": "Food & Recipes"
+          }
+        },
+        {
+          "slug": "ghumna-phirna",
+          "name": {
+            "hi": "घूमना-फिरना",
+            "en": "Travel"
+          }
+        }
+      ]
+    },
+    {
+      "key": "gallery",
+      "slug": "gallery",
+      "name": {
+        "hi": "गैलरी",
+        "en": "Gallery"
+      },
+      "blurb": {
+        "hi": "मीम्स, स्वाइपेबल कहानियाँ और दृश्य झलकियाँ",
+        "en": "Memes, swipeable carousels & visual stories"
+      },
+      "image": "/images/hero-podcast.png",
+      "children": [
+        {
+          "slug": "memes",
+          "name": {
+            "hi": "मीम्स-कोना",
+            "en": "Memes Corner"
+          }
+        },
+        {
+          "slug": "news-gallery",
+          "name": {
+            "hi": "न्यूज़ गैलरी",
+            "en": "News Gallery"
+          }
+        },
+        {
+          "slug": "entertainment-gallery",
+          "name": {
+            "hi": "एंटरटेनमेंट गैलरी",
+            "en": "Entertainment Gallery"
+          }
+        },
+        {
+          "slug": "sports-gallery",
+          "name": {
+            "hi": "स्पोर्ट्स गैलरी",
+            "en": "Sports Gallery"
+          }
+        },
+        {
+          "slug": "lifestyle-gallery",
+          "name": {
+            "hi": "लाइफस्टाइल गैलरी",
+            "en": "Lifestyle Gallery"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ckSpecial",
+      "slug": "ck-special",
+      "name": {
+        "hi": "CK स्पेशल",
+        "en": "CK Special"
+      },
+      "blurb": {
+        "hi": "सिर्फ़ कॉर्नर कोना पर",
+        "en": "Only on Corner Kona"
+      },
+      "image": "/images/ent-film.png",
+      "children": [
+        {
+          "slug": "naari-ki-hai-baari",
+          "name": {
+            "hi": "नारी की है बारी",
+            "en": "Her Turn"
+          }
+        },
+        {
+          "slug": "corner-exclusive",
+          "name": {
+            "hi": "कॉर्नर एक्सक्लूज़िव",
+            "en": "Corner Exclusive"
+          }
+        }
+      ]
+    },
+    {
+      "key": "sports",
+      "slug": "sports",
+      "name": {
+        "hi": "स्पोर्ट्स",
+        "en": "Sports"
+      },
+      "blurb": {
+        "hi": "मैदान के अंदर और बाहर की कहानियाँ",
+        "en": "Stories on and off the field"
+      },
+      "image": "/images/sports-cricket.png",
+      "children": [
+        {
+          "slug": "cricket",
+          "name": {
+            "hi": "क्रिकेट",
+            "en": "Cricket"
+          }
+        },
+        {
+          "slug": "football",
+          "name": {
+            "hi": "फ़ुटबॉल",
+            "en": "Football"
+          }
+        },
+        {
+          "slug": "kabaddi",
+          "name": {
+            "hi": "कबड्डी",
+            "en": "Kabaddi"
+          }
+        },
+        {
+          "slug": "athletics",
+          "name": {
+            "hi": "एथलेटिक्स",
+            "en": "Athletics"
+          }
+        }
+      ]
+    },
+    {
+      "key": "techTalk",
+      "slug": "tech-talk",
+      "name": {
+        "hi": "टेक-टॉक",
+        "en": "Tech Talk"
+      },
+      "blurb": {
+        "hi": "गैजेट्स, AI और भविष्य की तकनीक",
+        "en": "Gadgets, AI and future tech"
+      },
+      "image": "/images/geo-summit.png",
+      "children": [
+        {
+          "slug": "gadgets",
+          "name": {
+            "hi": "गैजेट्स और फ़ोन",
+            "en": "Gadgets & Phones"
+          }
+        },
+        {
+          "slug": "ai-world",
+          "name": {
+            "hi": "AI की दुनिया",
+            "en": "AI World"
+          }
+        },
+        {
+          "slug": "apps-security",
+          "name": {
+            "hi": "ऐप्स और सुरक्षा",
+            "en": "Apps & Security"
+          }
+        }
+      ]
+    },
+    {
+      "key": "scienceGyan",
+      "slug": "science-gyan",
+      "name": {
+        "hi": "साइंस-ज्ञान",
+        "en": "Science Gyan"
+      },
+      "blurb": {
+        "hi": "अंतरिक्ष, खोज और ब्रह्मांड के रहस्य",
+        "en": "Space missions, discoveries & cosmic mysteries"
+      },
+      "image": "/images/geo-summit.png",
+      "children": [
+        {
+          "slug": "space-missions",
+          "name": {
+            "hi": "अंतरिक्ष मिशन",
+            "en": "Space Missions"
+          }
+        },
+        {
+          "slug": "earth-mysteries",
+          "name": {
+            "hi": "धरती के रहस्य",
+            "en": "Earth Mysteries"
+          }
+        },
+        {
+          "slug": "future-science",
+          "name": {
+            "hi": "भविष्य का विज्ञान",
+            "en": "Future Science"
+          }
+        }
+      ]
+    },
+    {
+      "key": "sehat",
+      "slug": "sehat",
+      "name": {
+        "hi": "सेहत",
+        "en": "Health & Wellness"
+      },
+      "blurb": {
+        "hi": "फ़िटनेस, मानसिक शांति और स्वस्थ जीवन",
+        "en": "Fitness, mindfulness and healthy living"
+      },
+      "image": "/images/life-chai.png",
+      "children": [
+        {
+          "slug": "fitness-yoga",
+          "name": {
+            "hi": "फ़िटनेस और योग",
+            "en": "Fitness & Yoga"
+          }
+        },
+        {
+          "slug": "nutrition",
+          "name": {
+            "hi": "खान-पान और पोषण",
+            "en": "Nutrition & Diet"
+          }
+        },
+        {
+          "slug": "mental-peace",
+          "name": {
+            "hi": "मानसिक सुकून",
+            "en": "Mental Wellness"
+          }
+        }
+      ]
+    },
+    {
+      "key": "geopolitics",
+      "slug": "geopolitics",
+      "name": {
+        "hi": "भू-राजनीति",
+        "en": "Geopolitics"
+      },
+      "blurb": {
+        "hi": "दुनिया की चालें, आसान भाषा में",
+        "en": "World affairs, decoded"
+      },
+      "image": "/images/geo-summit.png"
+    },
+    {
+      "key": "bhakti",
+      "slug": "bhakti",
+      "name": {
+        "hi": "भक्ति",
+        "en": "Bhakti"
+      },
+      "blurb": {
+        "hi": "आस्था, परंपरा और शांति",
+        "en": "Faith, tradition and calm"
+      },
+      "image": "/images/bhakti-diya.png"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "ep-1",
+      "slug": "gully-se-world-cup",
+      "kind": "podcast",
+      "title": {
+        "hi": "गली से वर्ल्ड कप तक: छोटे शहरों के क्रिकेटर",
+        "en": "From Gully to World Cup: Small-town Cricketers"
+      },
+      "show": {
+        "hi": "कोना टॉक्स",
+        "en": "Kona Talks"
+      },
+      "category": "sports",
+      "durationMin": 48,
+      "image": "/images/hero-podcast.png",
+      "premium": false,
+      "language": "hi",
+      "publishedAt": "2026-10-25T10:21:36.217Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/gully-se-world-cup"
+        },
+        {
+          "format": "video",
+          "href": "/podcasts/gully-se-world-cup?view=video"
+        },
+        {
+          "format": "short",
+          "href": "/videos/kabaddi-raid"
+        }
+      ]
+    },
+    {
+      "id": "ep-2",
+      "slug": "parde-ke-peeche",
+      "kind": "podcast",
+      "title": {
+        "hi": "पर्दे के पीछे: एक गाने की 90 दिन की कहानी",
+        "en": "Behind the Curtain: 90 Days of One Song"
+      },
+      "show": {
+        "hi": "फ़िल्मी कोना",
+        "en": "Filmi Kona"
+      },
+      "category": "entertainment",
+      "durationMin": 36,
+      "image": "/images/ent-film.png",
+      "premium": false,
+      "language": "hi",
+      "publishedAt": "2026-10-25T03:21:36.217Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/parde-ke-peeche"
+        },
+        {
+          "format": "video",
+          "href": "/podcasts/parde-ke-peeche?view=video"
+        }
+      ]
+    },
+    {
+      "id": "ep-3",
+      "slug": "chips-ki-jung",
+      "kind": "podcast",
+      "title": {
+        "hi": "चिप्स की जंग: दुनिया की सबसे महँगी लड़ाई",
+        "en": "Chip Wars: The World’s Most Expensive Battle"
+      },
+      "show": {
+        "hi": "ग्लोबल कोना",
+        "en": "Global Kona"
+      },
+      "category": "geopolitics",
+      "durationMin": 52,
+      "image": "/images/geo-summit.png",
+      "premium": false,
+      "language": "hi",
+      "publishedAt": "2026-10-24T17:21:36.217Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/chips-ki-jung"
+        }
+      ]
+    },
+    {
+      "id": "ep-4",
+      "slug": "subah-ki-chai",
+      "kind": "audiobook",
+      "title": {
+        "hi": "सुबह की चाय और शहर की कहानियाँ",
+        "en": "Morning Tea & Tales of the City"
+      },
+      "show": {
+        "hi": "ऑडियो डायरी",
+        "en": "Audio Diary"
+      },
+      "category": "lifestyle",
+      "durationMin": 28,
+      "image": "/images/audiobook.png",
+      "premium": false,
+      "language": "hi",
+      "publishedAt": "2026-10-23T21:21:36.217Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/subah-ki-chai"
+        }
+      ]
+    },
+    {
+      "id": "ep-5",
+      "slug": "ganga-ke-ghat",
+      "kind": "podcast",
+      "title": {
+        "hi": "गंगा के घाट: बनारस से हरिद्वार तक",
+        "en": "Ghats of the Ganga: From Varanasi to Haridwar"
+      },
+      "show": {
+        "hi": "भक्ति यात्रा",
+        "en": "Bhakti Yatra"
+      },
+      "category": "bhakti",
+      "durationMin": 41,
+      "image": "/images/bhakti-diya.png",
+      "premium": false,
+      "language": "hi",
+      "publishedAt": "2026-10-22T13:41:36.217Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/ganga-ke-ghat"
+        },
+        {
+          "format": "short",
+          "href": "/videos/ganga-aarti"
+        }
+      ]
+    },
+    {
+      "id": "ep-6",
+      "slug": "ai-agents-ka-dour",
+      "kind": "podcast",
+      "title": {
+        "hi": "AI एजेंट्स का दौर: क्या बदल जाएगा हमारा काम?",
+        "en": "Era of AI Agents: Will Our Work Forever Change?"
+      },
+      "show": {
+        "hi": "टेक-टॉक",
+        "en": "Tech Talk"
+      },
+      "category": "techTalk",
+      "durationMin": 32,
+      "image": "/images/geo-summit.png",
+      "premium": false,
+      "language": "hi",
+      "publishedAt": "2026-10-24T13:21:36.218Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/ai-agents-ka-dour"
+        }
+      ]
+    },
+    {
+      "id": "ay-1",
+      "slug": "mann-ka-maun",
+      "kind": "podcast",
+      "title": {
+        "hi": "मन का मौन: ध्यान का पहला क़दम",
+        "en": "Silence of the Mind: First Step into Meditation"
+      },
+      "show": {
+        "hi": "अंतर यात्रा",
+        "en": "Antar Yatra"
+      },
+      "category": "bhakti",
+      "durationMin": 25,
+      "image": "/images/antar-yatra.png",
+      "premium": true,
+      "language": "hi",
+      "publishedAt": "2026-10-25T09:21:36.218Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/antar-yatra/mann-ka-maun"
+        }
+      ]
+    },
+    {
+      "id": "ay-2",
+      "slug": "gita-aur-aaj",
+      "kind": "podcast",
+      "title": {
+        "hi": "गीता और आज का युवा",
+        "en": "The Gita and Today’s Youth"
+      },
+      "show": {
+        "hi": "अंतर यात्रा",
+        "en": "Antar Yatra"
+      },
+      "category": "bhakti",
+      "durationMin": 38,
+      "image": "/images/bhakti-diya.png",
+      "premium": true,
+      "language": "hi",
+      "publishedAt": "2026-10-22T02:01:36.218Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/antar-yatra/gita-aur-aaj"
+        }
+      ]
+    }
+  ],
+  "stories": [
+    {
+      "id": "st-1",
+      "slug": "ipl-auction-small-towns",
+      "title": {
+        "hi": "IPL नीलामी में छोटे शहरों का बड़ा दबदबा",
+        "en": "Small Towns Dominate the IPL Auction"
+      },
+      "dek": {
+        "hi": "रांची से रोहतक तक, नई पीढ़ी कैसे बदल रही है खेल",
+        "en": "From Ranchi to Rohtak, a new generation is changing the game"
+      },
+      "category": "sports",
+      "image": "/images/sports-cricket.png",
+      "readMin": 6,
+      "publishedAt": "2026-10-25T11:51:36.218Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/gully-se-world-cup"
+        }
+      ]
+    },
+    {
+      "id": "st-2",
+      "slug": "chip-war-explained",
+      "title": {
+        "hi": "चिप वॉर: भारत के लिए मौक़ा या चुनौती?",
+        "en": "Chip War: Opportunity or Threat for India?"
+      },
+      "dek": {
+        "hi": "ताइवान, अमेरिका और चीन के बीच भारत की जगह",
+        "en": "Where India stands between Taiwan, the US and China"
+      },
+      "category": "geopolitics",
+      "image": "/images/geo-summit.png",
+      "readMin": 9,
+      "publishedAt": "2026-10-25T08:01:36.218Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/chips-ki-jung"
+        }
+      ]
+    },
+    {
+      "id": "st-3",
+      "slug": "retro-songs-comeback",
+      "title": {
+        "hi": "90s के गाने फिर से ट्रेंड में क्यों?",
+        "en": "Why Are 90s Songs Trending Again?"
+      },
+      "dek": {
+        "hi": "रील्स ने पुरानी धुनों को नई ज़िंदगी कैसे दी",
+        "en": "How reels gave old melodies a new life"
+      },
+      "category": "entertainment",
+      "image": "/images/ent-film.png",
+      "readMin": 5,
+      "publishedAt": "2026-10-25T01:41:36.218Z",
+      "formats": [
+        {
+          "format": "video",
+          "href": "/podcasts/parde-ke-peeche?view=video"
+        }
+      ]
+    },
+    {
+      "id": "st-4",
+      "slug": "kartik-purnima-dev-deepawali",
+      "title": {
+        "hi": "देव दीपावली: जब घाट रोशनी में नहाते हैं",
+        "en": "Dev Deepawali: When the Ghats Bathe in Light"
+      },
+      "dek": {
+        "hi": "काशी की इस परंपरा के पीछे की कथा",
+        "en": "The story behind Kashi’s festival of lamps"
+      },
+      "category": "bhakti",
+      "image": "/images/bhakti-diya.png",
+      "readMin": 7,
+      "publishedAt": "2026-10-24T12:21:36.218Z",
+      "formats": [
+        {
+          "format": "short",
+          "href": "/videos/ganga-aarti"
+        }
+      ]
+    },
+    {
+      "id": "st-5",
+      "slug": "first-salary-guide",
+      "title": {
+        "hi": "पहली सैलरी: 5 ग़लतियाँ जो सब करते हैं",
+        "en": "First Salary: 5 Mistakes Everyone Makes"
+      },
+      "dek": {
+        "hi": "बजट, बचत और थोड़ा मज़ा — बिना टेंशन",
+        "en": "Budget, save and still have fun — stress-free"
+      },
+      "category": "lifestyle",
+      "image": "/images/life-chai.png",
+      "readMin": 4,
+      "publishedAt": "2026-10-24T02:21:36.218Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/subah-ki-chai"
+        }
+      ]
+    },
+    {
+      "id": "st-6",
+      "slug": "ai-revolution-bharat",
+      "title": {
+        "hi": "AI क्रांति और भारत: छोटे शहरों के कोडर कैसे बना रहे हैं भविष्य",
+        "en": "AI Revolution & India: How Tier-2 Coders are Building the Future"
+      },
+      "dek": {
+        "hi": "आर्टिफिशियल इंटेलिजेंस अब सिर्फ़ सिलिकॉन वैली तक सीमित नहीं।",
+        "en": "AI is no longer confined to Silicon Valley."
+      },
+      "category": "techTalk",
+      "image": "/images/geo-summit.png",
+      "readMin": 5,
+      "publishedAt": "2026-10-23T14:41:36.218Z",
+      "formats": [
+        {
+          "format": "audio",
+          "href": "/podcasts/ai-agents-ka-dour"
+        }
+      ]
+    },
+    {
+      "id": "st-7",
+      "slug": "chandrayaan-se-shukrayaan",
+      "title": {
+        "hi": "चंद्रयान से शुक्रयान तक: भारत की अंतरिक्ष यात्रा का नया अध्याय",
+        "en": "From Chandrayaan to Shukrayaan: The Next Chapter in Space Exploration"
+      },
+      "dek": {
+        "hi": "इसरो के आगामी मिशन और सौरमंडल के अनसुलझे रहस्य।",
+        "en": "ISRO upcoming missions and unsolved mysteries of the solar system."
+      },
+      "category": "scienceGyan",
+      "image": "/images/geo-summit.png",
+      "readMin": 6,
+      "publishedAt": "2026-10-23T03:01:36.218Z",
+      "formats": []
+    },
+    {
+      "id": "st-8",
+      "slug": "desi-superfoods-fitness",
+      "title": {
+        "hi": "देसी सुपरफ़ूड्स: बाजरा, मखाना और घी क्यों बन रहे हैं ग्लोबल ट्रेंड",
+        "en": "Desi Superfoods: Why Millets, Makhana and Ghee are Going Global"
+      },
+      "dek": {
+        "hi": "प्राचीन भारतीय आहार का आधुनिक विज्ञान क्या कहता है।",
+        "en": "What modern science says about ancient Indian nutrition."
+      },
+      "category": "sehat",
+      "image": "/images/life-chai.png",
+      "readMin": 4,
+      "publishedAt": "2026-10-22T15:21:36.218Z",
+      "formats": []
+    },
+    {
+      "id": "st-9",
+      "slug": "viral-memes-aur-desh",
+      "title": {
+        "hi": "मीम कल्चर: जब 2026 के चुटकुलों ने इंटरनेट को एक साथ हंसाया",
+        "en": "Meme Culture: How Viral Trends United the Internet"
+      },
+      "dek": {
+        "hi": "हफ़्ते के सबसे लोकप्रिय मीम्स और उनकी अनोखी कहानियाँ।",
+        "en": "Top viral memes of the week and their backstories."
+      },
+      "category": "gallery",
+      "image": "/images/hero-podcast.png",
+      "readMin": 3,
+      "publishedAt": "2026-10-24T07:21:36.218Z",
+      "formats": []
+    }
+  ],
+  "shorts": [
+    {
+      "id": "sh-1",
+      "slug": "kabaddi-raid",
+      "title": {
+        "hi": "वो रेड जिसने मैच पलट दिया",
+        "en": "The raid that flipped the match"
+      },
+      "category": "sports",
+      "durationSec": 42,
+      "image": "/images/short-kabaddi.png",
+      "views": "1.2M"
+    },
+    {
+      "id": "sh-sports-2",
+      "slug": "last-ball-six",
+      "title": {
+        "hi": "आख़िरी गेंद पर ऐतिहासिक छक्का",
+        "en": "Historic six on the last ball"
+      },
+      "category": "sports",
+      "durationSec": 38,
+      "image": "/images/sports-cricket.png",
+      "views": "2.8M"
+    },
+    {
+      "id": "sh-sports-3",
+      "slug": "akhada-dangal",
+      "title": {
+        "hi": "मिट्टी के अखाड़े से नेशनल पोडियम तक",
+        "en": "From mud akhada to national podium"
+      },
+      "category": "sports",
+      "durationSec": 45,
+      "image": "/images/short-kabaddi.png",
+      "views": "950K"
+    },
+    {
+      "id": "sh-4",
+      "slug": "rooftop-dance",
+      "title": {
+        "hi": "छत पर डांस, शहर पर नज़र",
+        "en": "Rooftop dance over the city"
+      },
+      "category": "entertainment",
+      "durationSec": 34,
+      "image": "/images/short-dance.png",
+      "views": "530K"
+    },
+    {
+      "id": "sh-ent-2",
+      "slug": "indie-cinema-bts",
+      "title": {
+        "hi": "लो बजट, हाई विज़न: सेट का राज़",
+        "en": "Low budget, high vision: BTS secret"
+      },
+      "category": "entertainment",
+      "durationSec": 48,
+      "image": "/images/ent-film.png",
+      "views": "670K"
+    },
+    {
+      "id": "sh-ent-3",
+      "slug": "retro-dialogue-vibe",
+      "title": {
+        "hi": "90 के दशक का वो बेमिसाल अंदाज़",
+        "en": "That iconic 90s swagger"
+      },
+      "category": "entertainment",
+      "durationSec": 29,
+      "image": "/images/short-dance.png",
+      "views": "1.1M"
+    },
+    {
+      "id": "sh-genz-1",
+      "slug": "delulu-to-solulu",
+      "title": {
+        "hi": "डिलुलु से सॉलुलु: असली Gen-Z गाइड",
+        "en": "Delulu to Solulu: The Real Gen-Z Guide"
+      },
+      "category": "genZ",
+      "durationSec": 36,
+      "image": "/images/hero-podcast.png",
+      "views": "1.5M"
+    },
+    {
+      "id": "sh-genz-2",
+      "slug": "hostel-maggi-chaske",
+      "title": {
+        "hi": "रात के 2 बजे मैगी और एग्जाम की तैयारी",
+        "en": "2 AM Maggi & Exam Prep"
+      },
+      "category": "genZ",
+      "durationSec": 41,
+      "image": "/images/life-chai.png",
+      "views": "890K"
+    },
+    {
+      "id": "sh-genz-3",
+      "slug": "creator-speed-workflow",
+      "title": {
+        "hi": "30 सेकंड में रील एडिट करने का फॉर्मूला",
+        "en": "Formula to edit reels in 30 seconds"
+      },
+      "category": "genZ",
+      "durationSec": 44,
+      "image": "/images/hero-podcast.png",
+      "views": "1.9M"
+    },
+    {
+      "id": "sh-2",
+      "slug": "old-delhi-jalebi",
+      "title": {
+        "hi": "पुरानी दिल्ली की 100 साल पुरानी जलेबी",
+        "en": "Old Delhi’s 100-year-old jalebi"
+      },
+      "category": "lifestyle",
+      "durationSec": 55,
+      "image": "/images/short-streetfood.png",
+      "views": "842K"
+    },
+    {
+      "id": "sh-life-2",
+      "slug": "kulhad-chai-sukoon",
+      "title": {
+        "hi": "कुल्हड़ वाली चाय और बनारसी सुबह",
+        "en": "Kulhad chai and a serene Banaras morning"
+      },
+      "category": "lifestyle",
+      "durationSec": 33,
+      "image": "/images/life-chai.png",
+      "views": "1.4M"
+    },
+    {
+      "id": "sh-life-3",
+      "slug": "weekend-hidden-trail",
+      "title": {
+        "hi": "भीड़ से दूर, प्रकृति की गोद में एक कोना",
+        "en": "Away from the crowd: A peaceful corner"
+      },
+      "category": "lifestyle",
+      "durationSec": 49,
+      "image": "/images/short-streetfood.png",
+      "views": "720K"
+    },
+    {
+      "id": "sh-3",
+      "slug": "ganga-aarti",
+      "title": {
+        "hi": "गंगा आरती के 60 सेकंड",
+        "en": "60 seconds of Ganga Aarti"
+      },
+      "category": "bhakti",
+      "durationSec": 60,
+      "image": "/images/short-aarti.png",
+      "views": "2.4M"
+    },
+    {
+      "id": "sh-bhakti-2",
+      "slug": "kashi-sunrise-bells",
+      "title": {
+        "hi": "काशी के घाटों पर भोर की घंटियाँ",
+        "en": "Morning bells on the Ghats of Kashi"
+      },
+      "category": "bhakti",
+      "durationSec": 50,
+      "image": "/images/bhakti-diya.png",
+      "views": "1.8M"
+    },
+    {
+      "id": "sh-bhakti-3",
+      "slug": "vedic-chants-peace",
+      "title": {
+        "hi": "मन को शांत करने वाले वैदिक मंत्र",
+        "en": "Vedic chants to calm your soul"
+      },
+      "category": "bhakti",
+      "durationSec": 45,
+      "image": "/images/short-aarti.png",
+      "views": "3.1M"
+    },
+    {
+      "id": "sh-news-1",
+      "slug": "budget-explained-short",
+      "title": {
+        "hi": "बजट का सीधा असर आपकी जेब पर",
+        "en": "How the budget directly impacts your pocket"
+      },
+      "category": "news",
+      "durationSec": 45,
+      "image": "/images/geo-summit.png",
+      "views": "1.1M"
+    },
+    {
+      "id": "sh-news-2",
+      "slug": "bullet-train-progress-report",
+      "title": {
+        "hi": "हाई-स्पीड बुलेट ट्रेन: ग्राउंड रियलिटी",
+        "en": "High-speed bullet train: Ground reality"
+      },
+      "category": "news",
+      "durationSec": 39,
+      "image": "/images/geo-summit.png",
+      "views": "920K"
+    },
+    {
+      "id": "sh-tech-1",
+      "slug": "ai-smart-glasses-demo",
+      "title": {
+        "hi": "स्मार्टफ़ोन का विकल्प: AI ग्लासेज़?",
+        "en": "Replacing smartphones: AI Smart Glasses?"
+      },
+      "category": "techTalk",
+      "durationSec": 43,
+      "image": "/images/hero-podcast.png",
+      "views": "830K"
+    },
+    {
+      "id": "sh-tech-2",
+      "slug": "digital-arrest-scam-alert",
+      "title": {
+        "hi": "डिजिटल अरेस्ट फ्रॉड से बचने के 3 नियम",
+        "en": "3 golden rules to avoid digital arrest frauds"
+      },
+      "category": "techTalk",
+      "durationSec": 37,
+      "image": "/images/geo-summit.png",
+      "views": "1.6M"
+    },
+    {
+      "id": "sh-sehat-1",
+      "slug": "spine-stretch-desk-workers",
+      "title": {
+        "hi": "लैपटॉप पर 8 घंटे? ये 30s स्ट्रेच करें",
+        "en": "8 hours on laptop? Try this 30s stretch"
+      },
+      "category": "sehat",
+      "durationSec": 32,
+      "image": "/images/life-chai.png",
+      "views": "1.3M"
+    },
+    {
+      "id": "sh-sehat-2",
+      "slug": "morning-warm-water-habit",
+      "title": {
+        "hi": "सवेरे गुनगुने पानी के चमत्कारी फ़ायदे",
+        "en": "Miraculous benefits of morning warm water"
+      },
+      "category": "sehat",
+      "durationSec": 28,
+      "image": "/images/short-streetfood.png",
+      "views": "990K"
+    },
+    {
+      "id": "sh-desh-1",
+      "slug": "vocal-for-local-revolution",
+      "title": {
+        "hi": "लोकल ब्रांड्स जो बन गए ग्लोबल आइकन",
+        "en": "Local Indian brands going global"
+      },
+      "category": "deshKiCharcha",
+      "durationSec": 40,
+      "image": "/images/geo-summit.png",
+      "views": "760K"
+    },
+    {
+      "id": "sh-desh-2",
+      "slug": "young-farmers-smart-agriculture",
+      "title": {
+        "hi": "ड्रोन और AI से खेती करते युवा किसान",
+        "en": "Young farmers adopting drones & AI"
+      },
+      "category": "deshKiCharcha",
+      "durationSec": 46,
+      "image": "/images/short-kabaddi.png",
+      "views": "1.0M"
+    }
+  ],
+  "hero": {
+    "episodeId": "ep-1",
+    "kicker": {
+      "hi": "नया एपिसोड · ऑडियो + वीडियो",
+      "en": "New episode · Audio + Video"
+    },
+    "summary": {
+      "hi": "छोटे शहरों के मैदानों से निकलकर बड़े स्टेडियम तक पहुँचने वाले खिलाड़ियों की असली कहानी — उनकी अपनी ज़ुबानी।",
+      "en": "The real story of players who made it from small-town grounds to the biggest stadiums — in their own words."
+    }
+  },
+  "liveBlogs": [
+    {
+      "id": "lb-1",
+      "slug": "india-vs-australia-live",
+      "active": true,
+      "title": {
+        "hi": "भारत बनाम ऑस्ट्रेलिया: तीसरा टेस्ट, दिन 2",
+        "en": "India vs Australia: 3rd Test, Day 2"
+      },
+      "category": "sports",
+      "entries": [
+        {
+          "id": "le-1",
+          "type": "text",
+          "at": "2026-10-25T13:19:36.218Z",
+          "body": {
+            "hi": "लंच तक भारत 182/3। गिल 74* पर नाबाद, शानदार कवर ड्राइव्स।",
+            "en": "India 182/3 at lunch. Gill unbeaten on 74 with some gorgeous cover drives."
+          }
+        },
+        {
+          "id": "le-2",
+          "type": "short",
+          "at": "2026-10-25T13:10:36.218Z",
+          "shortId": "sh-1"
+        },
+        {
+          "id": "le-3",
+          "type": "text",
+          "at": "2026-10-25T13:02:36.218Z",
+          "body": {
+            "hi": "विकेट! स्टार्क की इनस्विंगर, पंत बोल्ड। 151/3",
+            "en": "WICKET! Starc’s inswinger bowls Pant. 151/3"
+          }
+        },
+        {
+          "id": "le-4",
+          "type": "article",
+          "at": "2026-10-25T12:47:36.218Z",
+          "storyId": "st-1"
+        }
+      ]
+    }
+  ]
+}

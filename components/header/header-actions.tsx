@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { Bell, Search, Check, Radio, Sparkles, UserRound } from 'lucide-react'
+import { Bell, Search, Check, Radio, Sparkles, UserRound, SlidersHorizontal } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
@@ -48,40 +48,46 @@ export function HeaderActions({ locale, t }: { locale: Locale; t: Dictionary }) 
     },
   ]
 
+  const clearNotifications = () => {
+    setUnreadCount(0)
+  }
+
   return (
     <>
-      {/* Floating Instant Search Tab */}
       <FloatingSearchTab locale={locale} t={t} />
 
-      {/* Notifications Popover */}
-      <div ref={notifRef} className="relative hidden sm:inline-block">
+      {/* Notification Bell with Dropdown */}
+      <div className="relative" ref={notifRef}>
         <Button
           variant="ghost"
           size="icon"
+          aria-label={t.nav.notifications}
           onClick={() => setShowNotifications((prev) => !prev)}
           className="relative rounded-full transition-transform hover:scale-110 active:scale-95"
-          aria-label={`${t.nav.notifications} (${unreadCount})`}
         >
-          <Bell className="size-5 transition-transform group-hover:rotate-12" aria-hidden="true" />
+          <Bell className="size-5" aria-hidden="true" />
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 grid min-w-4 place-items-center rounded-full bg-live px-1 text-[10px] leading-4 font-bold text-white shadow-sm shadow-red-500/50 animate-pulse">
-              {unreadCount}
+            <span className="absolute 1 top-1.5 right-1.5 flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-sports opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-sports" />
             </span>
           )}
         </Button>
 
         {showNotifications && (
-          <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl border border-border/80 bg-card p-3 shadow-2xl backdrop-blur animate-rise z-50">
-            <div className="flex items-center justify-between pb-2 border-b border-border/60 px-1">
-              <span className="font-display font-extrabold text-sm">{t.nav.notifications}</span>
+          <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl border bg-popover/95 p-3 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 z-50">
+            <div className="flex items-center justify-between border-b pb-2 px-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                {t.nav.notifications}
+              </span>
               {unreadCount > 0 && (
                 <button
                   type="button"
-                  onClick={() => setUnreadCount(0)}
-                  className="inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:underline cursor-pointer"
+                  onClick={clearNotifications}
+                  className="flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
                 >
                   <Check className="size-3" />
-                  {isHi ? 'सब पढ़ें' : 'Mark all read'}
+                  {isHi ? 'सब पढ़ा हुआ' : 'Mark all read'}
                 </button>
               )}
             </div>
@@ -92,11 +98,11 @@ export function HeaderActions({ locale, t }: { locale: Locale; t: Dictionary }) 
                   key={n.id}
                   href={n.href}
                   onClick={() => setShowNotifications(false)}
-                  className="flex items-start gap-2.5 rounded-xl p-2.5 transition-colors hover:bg-muted text-left"
+                  className="flex items-start gap-2.5 rounded-xl p-2 transition-colors hover:bg-muted"
                 >
-                  <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                  <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-muted">
                     {n.isLive ? (
-                      <Radio className="size-3.5 text-red-500 animate-pulse" />
+                      <Radio className="size-3.5 text-rose-500 animate-pulse" />
                     ) : n.isPremium ? (
                       <Sparkles className="size-3.5 text-amber-500" />
                     ) : (
@@ -116,6 +122,20 @@ export function HeaderActions({ locale, t }: { locale: Locale; t: Dictionary }) 
 
       {/* Theme Toggle */}
       <ThemeToggle label={t.nav.toggleTheme} className="hidden md:inline-flex" />
+
+      {/* Admin Portal Button */}
+      <Link
+        href="/admin"
+        aria-label="Admin Portal"
+        title={isHi ? 'एडमिन पोर्टल (Admin Portal)' : 'Admin Portal'}
+        className={cn(
+          buttonVariants({ variant: 'ghost', size: 'sm' }),
+          'hidden items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold text-muted-foreground hover:text-purple-400 hover:bg-purple-500/10 transition-colors sm:inline-flex'
+        )}
+      >
+        <SlidersHorizontal className="size-3.5" aria-hidden="true" />
+        <span className="hidden lg:inline">Admin</span>
+      </Link>
 
       {/* Profile/Account Button */}
       <Link
