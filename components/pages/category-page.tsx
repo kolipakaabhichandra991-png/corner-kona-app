@@ -14,7 +14,23 @@ export async function CategoryPage({ locale, category }: { locale: Locale; categ
 
   return (
     <div className="flex flex-col gap-12 pb-16">
-      <PageHeader title={category.name[locale]} sub={category.blurb[locale]} accent={sectionStyle[category.key].bg} />
+      <PageHeader title={category.name[locale]} sub={category.blurb[locale]} accent={sectionStyle[category.key]?.bg || 'bg-primary'} />
+
+      {category.children && category.children.length > 0 && (
+        <div className="mx-auto -mt-6 flex w-full max-w-7xl flex-wrap items-center gap-2 px-4 md:px-6">
+          <span className="mr-1 text-xs font-bold tracking-wider text-muted-foreground uppercase">
+            {locale === 'hi' ? 'उप-श्रेणियाँ:' : 'Subcategories:'}
+          </span>
+          {category.children.map((sub) => (
+            <span
+              key={sub.slug}
+              className="inline-flex items-center rounded-full border bg-muted/60 px-3.5 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
+            >
+              {sub.name[locale]}
+            </span>
+          ))}
+        </div>
+      )}
 
       {empty && (
         <p className="mx-auto w-full max-w-7xl px-4 text-muted-foreground md:px-6">{t.pages.noResults}</p>

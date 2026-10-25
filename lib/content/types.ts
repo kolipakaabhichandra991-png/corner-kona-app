@@ -5,7 +5,7 @@ export type Localized = Record<Locale, string>
 
 export type CategoryKey = Extract<
   SectionKey,
-  'sports' | 'entertainment' | 'geopolitics' | 'bhakti' | 'lifestyle' | 'news' | 'deshKiCharcha' | 'genZ' | 'ckSpecial'
+  'sports' | 'entertainment' | 'geopolitics' | 'bhakti' | 'lifestyle' | 'news' | 'deshKiCharcha' | 'genZ' | 'ckSpecial' | 'gallery' | 'techTalk' | 'scienceGyan' | 'sehat'
 >
 
 export interface SubCategory {

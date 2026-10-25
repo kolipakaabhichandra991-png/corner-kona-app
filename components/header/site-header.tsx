@@ -12,6 +12,7 @@ import { AntarYatraButton } from './antar-yatra-button'
 import { LanguagePill } from './language-pill'
 import { LivePill } from './live-pill'
 import { HeaderActions } from './header-actions'
+import { CategoryNav } from './category-nav'
 
 interface Props {
   locale: Locale
@@ -67,6 +68,7 @@ export function SiteHeader({ locale, t, latest, categories }: Props) {
           <HeaderActions locale={locale} t={t} />
         </div>
       </div>
+      <CategoryNav locale={locale} categories={categories} />
     </header>
   )
 }

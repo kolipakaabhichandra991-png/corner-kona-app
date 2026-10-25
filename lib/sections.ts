@@ -26,5 +26,8 @@ export const sectionStyle: Record<CategoryKey, { bg: string; text: string; borde
     border: 'border-ck-special',
     ring: 'ring-ck-special',
   },
+  gallery: { bg: 'bg-rose-500', text: 'text-rose-500', border: 'border-rose-500', ring: 'ring-rose-500' },
+  techTalk: { bg: 'bg-sky-500', text: 'text-sky-500', border: 'border-sky-500', ring: 'ring-sky-500' },
+  scienceGyan: { bg: 'bg-teal-500', text: 'text-teal-500', border: 'border-teal-500', ring: 'ring-teal-500' },
+  sehat: { bg: 'bg-lime-500', text: 'text-lime-500', border: 'border-lime-500', ring: 'ring-lime-500' },
 }
-

@@ -128,7 +128,7 @@ export function PodcastMegaMenu({ locale, t, latest, categories }: Props) {
                     onClick={() => setOpen(false)}
                     className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
                   >
-                    <span className={cn('size-2.5 rounded-full', sectionStyle[c.key].bg)} aria-hidden="true" />
+                    <span className={cn('size-2.5 rounded-full', sectionStyle[c.key]?.bg || 'bg-primary')} aria-hidden="true" />
                     {c.name[locale]}
                   </Link>
                 </li>

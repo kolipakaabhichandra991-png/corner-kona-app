@@ -32,7 +32,7 @@ export function MoreMenu({ locale, t, children }: { locale: Locale; t: Dictionar
                 onClick={close}
                 className="flex items-center gap-2.5 rounded-xl border p-3 text-sm font-semibold transition-colors hover:bg-muted"
               >
-                <span className={cn('size-3 rounded-full', sectionStyle[c.key].bg)} aria-hidden="true" />
+                <span className={cn('size-3 rounded-full', sectionStyle[c.key]?.bg || 'bg-primary')} aria-hidden="true" />
                 {c.name[locale]}
               </Link>
             ))}
