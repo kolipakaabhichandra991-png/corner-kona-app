@@ -26,23 +26,27 @@ export async function RootShell({ locale, children }: { locale: Locale; children
 
   return (
     <html lang={locale} className={`${baloo.variable} ${mukta.variable} bg-background`} suppressHydrationWarning>
-      <body className="min-h-dvh antialiased relative overflow-x-hidden" data-locale={locale}>
+      <body className="min-h-dvh antialiased relative overflow-x-hidden bg-background text-foreground" data-locale={locale}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AudioProvider>
             {/* Contextual Studio & Soundwave Background Pattern */}
             <BackgroundPattern />
 
-            <a
-              href="#main"
-              className="sr-only z-[60] rounded-md bg-primary px-4 py-2 font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
-            >
-              {t.nav.skip}
-            </a>
-            <SiteHeader locale={locale} t={t} latest={latest} categories={categories} />
-            <main id="main" className="pb-28 lg:pb-16">
-              {children}
-            </main>
-            <SiteFooter locale={locale} t={t} />
+            {/* Elevated Content Layer sitting cleanly above background pattern */}
+            <div className="relative z-10 flex min-h-dvh flex-col">
+              <a
+                href="#main"
+                className="sr-only z-[60] rounded-md bg-primary px-4 py-2 font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+              >
+                {t.nav.skip}
+              </a>
+              <SiteHeader locale={locale} t={t} latest={latest} categories={categories} />
+              <main id="main" className="flex-1 pb-28 lg:pb-16">
+                {children}
+              </main>
+              <SiteFooter locale={locale} t={t} />
+            </div>
+
             <StickyAudioDock locale={locale} />
             <BilingualTranscriptSheet />
             <MobileBottomNav locale={locale} t={t} />

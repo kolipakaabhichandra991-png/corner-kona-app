@@ -34,10 +34,10 @@ export function SiteHeader({ locale, t, latest, categories }: Props) {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-300',
+        'sticky top-0 z-50 border-b backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-300',
         scrolled
-          ? 'border-border bg-background/85 shadow-sm backdrop-blur-xl'
-          : 'border-transparent bg-background',
+          ? 'border-border bg-background/90 shadow-md'
+          : 'border-border/40 bg-background/75',
       )}
     >
       <div
