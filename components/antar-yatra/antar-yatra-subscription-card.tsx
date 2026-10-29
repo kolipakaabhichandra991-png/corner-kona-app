@@ -2,7 +2,16 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Sparkles, Check, ShieldCheck, Mail, KeyRound, ArrowRight, Star, HeartHandshake, Headphones } from 'lucide-react'
+import {
+  Sparkles,
+  ShieldCheck,
+  Mail,
+  KeyRound,
+  ArrowRight,
+  Star,
+  Headphones,
+  User,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
@@ -21,8 +30,9 @@ export function AntarYatraSubscriptionCard({
   onComplete,
 }: AntarYatraSubscriptionCardProps) {
   const isHi = locale === 'hi'
-  const [tab, setTab] = useState<'subscribe' | 'login'>('subscribe')
+  const [tab, setTab] = useState<'create' | 'login'>('create')
   const [tier, setTier] = useState<'patron' | 'free'>('patron')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -63,7 +73,7 @@ export function AntarYatraSubscriptionCard({
             </span>
             <div>
               <h4 className="font-display text-sm font-black text-foreground">
-                {isHi ? 'अंतर यात्रा प्रीमियम मेंबरशिप' : 'Antar Yatra Premium'}
+                {isHi ? 'अंतर यात्रा खाता' : 'Antar Yatra Account'}
               </h4>
               <p className="text-[11px] text-muted-foreground">
                 {isHi ? 'भीतर की यात्रा के लिए विशेष क्लब' : 'Unlock spiritual audio & all stories'}
@@ -81,7 +91,7 @@ export function AntarYatraSubscriptionCard({
               <ShieldCheck className="size-6" />
             </span>
             <p className="text-sm font-bold text-foreground">
-              {isHi ? 'आप सदस्य बन चुके हैं!' : 'Welcome to the Circle!'}
+              {isHi ? 'खाता सफलतापूर्वक बन गया!' : 'Account Created Successfully!'}
             </p>
             <p className="text-xs text-muted-foreground">
               {isHi
@@ -171,21 +181,21 @@ export function AntarYatraSubscriptionCard({
                 <Sparkles className="size-3.5 mr-1" />
                 {tier === 'patron'
                   ? isHi
-                    ? 'संरक्षक बनें (₹199/माह)'
-                    : 'Subscribe as Patron (₹199)'
+                    ? 'खाता बनाएँ (₹199/माह)'
+                    : 'Create Account (₹199)'
                   : isHi
-                  ? 'मुफ़्त सदस्यता लें'
-                  : 'Join Free Tier'}
+                  ? 'मुफ़्त खाता बनाएँ'
+                  : 'Create Free Account'}
               </Button>
             </form>
 
-            {/* Footer link to full Antar Yatra experience */}
+            {/* Footer link */}
             <div className="mt-1 flex items-center justify-between border-t border-border/50 pt-2 text-[11px]">
               <Link
                 href={localePath(locale, '/antar-yatra')}
                 className="font-bold text-amber-600 hover:underline dark:text-amber-400"
               >
-                {isHi ? 'सभी अंतर यात्रा एपिसोड्स देखें →' : 'Explore all episodes →'}
+                {isHi ? 'सभी एपिसोड्स देखें →' : 'Explore all episodes →'}
               </Link>
               <Link
                 href={localePath(locale, '/login')}
@@ -200,7 +210,7 @@ export function AntarYatraSubscriptionCard({
     )
   }
 
-  // Full Variant for /antar-yatra page
+  // Full Variant for /antar-yatra landing page
   return (
     <section aria-labelledby="antar-sub-h" className="mx-auto w-full max-w-7xl px-4 md:px-6">
       <div className="relative isolate overflow-hidden rounded-3xl border border-amber-500/30 bg-gradient-to-br from-ink via-stone-900 to-amber-950/40 p-6 text-ink-foreground shadow-2xl shadow-amber-500/10 md:p-10">
@@ -223,7 +233,7 @@ export function AntarYatraSubscriptionCard({
                   </>
                 ) : (
                   <>
-                    Unlock the Inner Journey with <span className="bg-gradient-to-r from-amber-400 via-orange-300 to-amber-200 bg-clip-text text-transparent">Antar Yatra Patron</span>
+                    Unlock the Inner Journey with <span className="bg-gradient-to-r from-amber-400 via-orange-300 to-amber-200 bg-clip-text text-transparent">Antar Yatra</span>
                   </>
                 )}
               </h2>
@@ -252,24 +262,24 @@ export function AntarYatraSubscriptionCard({
             </div>
           </div>
 
-          {/* Right Column: Interactive Subscription / Patron Form */}
+          {/* Right Column: Interactive Account Creation & Sign In Box */}
           <div className="flex flex-col rounded-3xl border border-amber-500/30 bg-background/95 p-6 text-foreground shadow-2xl backdrop-blur md:p-8 lg:col-span-6">
-            {/* Tabs */}
-            <div className="grid grid-cols-2 rounded-2xl bg-muted p-1 text-sm font-bold">
+            {/* Top Tabs: Create Account vs Sign In */}
+            <div className="grid grid-cols-2 rounded-2xl bg-muted/80 p-1 text-sm font-bold">
               <button
                 type="button"
                 onClick={() => {
-                  setTab('subscribe')
+                  setTab('create')
                   setSubmitted(false)
                 }}
                 className={cn(
                   'rounded-xl py-2.5 transition-all duration-200 cursor-pointer',
-                  tab === 'subscribe'
+                  tab === 'create'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 )}
               >
-                {isHi ? 'सब्सक्राइब करें' : 'Subscribe'}
+                {isHi ? 'खाता बनाएँ' : 'Create Account'}
               </button>
               <button
                 type="button"
@@ -294,75 +304,109 @@ export function AntarYatraSubscriptionCard({
                   <ShieldCheck className="size-8" />
                 </span>
                 <h3 className="text-2xl font-black">
-                  {isHi ? 'अंतर यात्रा में आपका स्वागत है!' : 'Welcome to Antar Yatra!'}
+                  {tab === 'create'
+                    ? isHi
+                      ? 'खाता सफलतापूर्वक बन गया!'
+                      : 'Account Created Successfully!'
+                    : isHi
+                    ? 'लॉगिन सफल रहा!'
+                    : 'Welcome Back!'}
                 </h3>
                 <p className="max-w-sm text-sm text-muted-foreground">
                   {isHi
                     ? `आपके ईमेल (${email}) पर पुष्टि और सक्रियण लिंक भेज दिया गया है। अब सभी प्रीमियम ऑडियो अनलॉक हो चुके हैं।`
-                    : `A confirmation and activation link has been sent to ${email}. All premium spiritual episodes are now unlocked for you.`}
+                    : `A confirmation link has been sent to ${email}. All premium spiritual episodes are now accessible.`}
                 </p>
                 <Button
                   onClick={() => setSubmitted(false)}
                   className="mt-2 rounded-full font-bold bg-amber-500 text-stone-950 hover:bg-amber-400"
                 >
-                  {isHi ? 'सदस्यता विवरण देखें' : 'Manage Subscription'}
+                  {isHi ? 'खाता डैशबोर्ड देखें' : 'Manage Account'}
                 </Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-                {tab === 'subscribe' && (
+                {/* Plan Selection Cards (in Create Account Mode) */}
+                {tab === 'create' && (
                   <div className="grid grid-cols-2 gap-3 pb-2">
-                    <button
-                      type="button"
-                      onClick={() => setTier('patron')}
-                      className={cn(
-                        'relative flex flex-col rounded-2xl border p-4 text-left transition-all cursor-pointer overflow-hidden',
-                        tier === 'patron'
-                          ? 'border-amber-500 ring-2 ring-amber-500/40 bg-amber-500/10'
-                          : 'border-border hover:border-amber-500/50'
-                      )}
-                    >
-                      <span className="absolute top-2 right-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-[9px] font-black uppercase text-white shadow-sm">
-                        Recommended
-                      </span>
-                      <span className="text-xs font-bold text-amber-600 dark:text-amber-400">
-                        {isHi ? 'अंतर यात्रा संरक्षक' : 'Patron Pass'}
-                      </span>
-                      <div className="mt-1 flex items-baseline gap-1">
-                        <span className="text-xl font-black">₹199</span>
-                        <span className="text-xs font-normal text-muted-foreground">/mo</span>
-                      </div>
-                      <span className="mt-1 text-[11px] text-muted-foreground">
-                        {isHi ? 'ऑल-एक्सेस व विज्ञापन-मुक्त' : 'All-access, early & ad-free'}
-                      </span>
-                    </button>
-
                     <button
                       type="button"
                       onClick={() => setTier('free')}
                       className={cn(
                         'flex flex-col rounded-2xl border p-4 text-left transition-all cursor-pointer',
                         tier === 'free'
-                          ? 'border-primary ring-2 ring-primary/40 bg-primary/5'
-                          : 'border-border hover:border-primary/50'
+                          ? 'border-primary ring-2 ring-primary/40 bg-primary/10'
+                          : 'border-border/60 hover:border-border'
                       )}
                     >
                       <span className="text-xs font-bold text-muted-foreground">
-                        {isHi ? 'मुफ़्त प्रीव्यू' : 'Free Preview'}
+                        {isHi ? 'मुफ़्त' : 'Free'}
                       </span>
                       <div className="mt-1 flex items-baseline gap-1">
-                        <span className="text-xl font-black">₹0</span>
+                        <span className="text-2xl font-black text-foreground">₹0</span>
                       </div>
                       <span className="mt-1 text-[11px] text-muted-foreground">
-                        {isHi ? 'साप्ताहिक डाइजेस्ट व क्लिप्स' : 'Weekly digest & clips'}
+                        {isHi ? 'साप्ताहिक डाइजेस्ट' : 'Weekly Digest'}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setTier('patron')}
+                      className={cn(
+                        'relative flex flex-col rounded-2xl border p-4 text-left transition-all cursor-pointer overflow-hidden',
+                        tier === 'patron'
+                          ? 'border-purple-500 ring-2 ring-purple-500/50 bg-purple-500/10'
+                          : 'border-border/60 hover:border-purple-500/50'
+                      )}
+                    >
+                      <span className="absolute top-3 right-3 rounded-full bg-gradient-to-r from-purple-500 to-sky-400 px-2 py-0.5 text-[9px] font-black uppercase text-white shadow-sm">
+                        POPULAR
+                      </span>
+                      <span className="text-xs font-bold text-purple-600 dark:text-purple-400">
+                        {isHi ? 'संरक्षक' : 'Patron'}
+                      </span>
+                      <div className="mt-1 flex items-baseline gap-1">
+                        <span className="text-2xl font-black text-foreground">₹199</span>
+                        <span className="text-xs text-muted-foreground">/mo</span>
+                      </div>
+                      <span className="mt-1 text-[11px] text-muted-foreground">
+                        {isHi ? 'सभी प्रीमियम एपिसोड्स' : 'All Premium'}
                       </span>
                     </button>
                   </div>
                 )}
 
+                {/* Name Input (in Create Account Mode) */}
+                {tab === 'create' && (
+                  <div className="flex flex-col gap-1.5">
+                    <label
+                      className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground"
+                      htmlFor="antar-name"
+                    >
+                      {isHi ? 'पूरा नाम (वैकल्पिक)' : 'FULL NAME'}
+                    </label>
+                    <div className="relative">
+                      <User className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                      <input
+                        id="antar-name"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder={isHi ? 'अपना नाम दर्ज करें' : 'Your name'}
+                        className="h-11 w-full rounded-xl border border-border/80 bg-background/80 pr-4 pl-10 text-sm outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Email Input */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground" htmlFor="antar-email">
-                    {isHi ? 'ईमेल पता' : 'Email Address'}
+                  <label
+                    className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground"
+                    htmlFor="antar-email"
+                  >
+                    {isHi ? 'ईमेल पता' : 'EMAIL ADDRESS'}
                   </label>
                   <div className="relative">
                     <Mail className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -373,59 +417,102 @@ export function AntarYatraSubscriptionCard({
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="h-11 w-full rounded-xl border bg-background pr-4 pl-10 text-sm outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                      className="h-11 w-full rounded-xl border border-border/80 bg-background/80 pr-4 pl-10 text-sm outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     />
                   </div>
                 </div>
 
-                {tab === 'login' && (
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground" htmlFor="antar-pwd">
-                        {isHi ? 'पासवर्ड' : 'Password'}
-                      </label>
-                      <button type="button" className="text-xs font-semibold text-amber-600 hover:underline dark:text-amber-400">
+                {/* Password Input */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between">
+                    <label
+                      className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground"
+                      htmlFor="antar-pwd"
+                    >
+                      {isHi ? 'पासवर्ड' : 'PASSWORD'}
+                    </label>
+                    {tab === 'login' && (
+                      <button
+                        type="button"
+                        className="text-xs font-semibold text-amber-600 hover:underline dark:text-amber-400"
+                      >
                         {isHi ? 'पासवर्ड भूल गए?' : 'Forgot password?'}
                       </button>
-                    </div>
-                    <div className="relative">
-                      <KeyRound className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-                      <input
-                        id="antar-pwd"
-                        type="password"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="h-11 w-full rounded-xl border bg-background pr-4 pl-10 text-sm outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
-                      />
-                    </div>
+                    )}
                   </div>
-                )}
+                  <div className="relative">
+                    <KeyRound className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      id="antar-pwd"
+                      type="password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="h-11 w-full rounded-xl border border-border/80 bg-background/80 pr-4 pl-10 text-sm outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                    />
+                  </div>
+                </div>
 
+                {/* Submit Button */}
                 <Button
                   type="submit"
                   size="lg"
-                  className="mt-2 h-12 w-full rounded-xl font-bold bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/25 hover:opacity-95 active:scale-95 transition-all cursor-pointer"
+                  className={cn(
+                    'mt-2 h-12 w-full rounded-xl font-bold text-white shadow-lg transition-all cursor-pointer',
+                    tab === 'create'
+                      ? tier === 'patron'
+                        ? 'bg-gradient-to-r from-purple-500 via-indigo-500 to-sky-400 hover:opacity-95 shadow-purple-500/25 active:scale-98'
+                        : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-95 shadow-amber-500/25 active:scale-98'
+                      : 'bg-gradient-to-r from-amber-500 to-orange-600 hover:opacity-95 shadow-amber-500/25 active:scale-98'
+                  )}
                 >
-                  {tab === 'subscribe'
+                  {tab === 'create'
                     ? isHi
                       ? tier === 'patron'
-                        ? 'अंतर यात्रा मेंबरशिप लें (₹199/माह)'
-                        : 'मुफ़्त सब्सक्राइब करें'
+                        ? 'खाता बनाएँ व संरक्षक बनें (₹199)'
+                        : 'मुफ़्त खाता बनाएँ'
                       : tier === 'patron'
-                      ? 'Subscribe as Antar Yatra Patron (₹199)'
-                      : 'Subscribe for Free'
+                      ? 'Join Antar Yatra Patron (₹199)'
+                      : 'Create Free Account'
                     : isHi
-                    ? 'लॉगिन करें'
+                    ? 'अकाउंट में लॉगिन करें'
                     : 'Sign In to Account'}
                 </Button>
 
+                {/* Disclaimer */}
                 <p className="text-center text-xs text-muted-foreground">
                   {isHi
-                    ? 'सदस्यता कभी भी रद्द की जा सकती है। 100% सुरक्षित भुगतान।'
-                    : 'Cancel anytime with one click. 100% secure checkout.'}
+                    ? 'जारी रखकर, आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत होते हैं।'
+                    : 'By continuing you agree to our Terms of Service & Privacy Policy.'}
                 </p>
+
+                {/* Switch Tab helper link */}
+                <div className="text-center pt-1 text-xs">
+                  {tab === 'create' ? (
+                    <span className="text-muted-foreground">
+                      {isHi ? 'पहले से खाता है?' : 'Already have an account?'}{' '}
+                      <button
+                        type="button"
+                        onClick={() => setTab('login')}
+                        className="font-bold text-amber-600 hover:underline dark:text-amber-400 cursor-pointer"
+                      >
+                        {isHi ? 'लॉगिन करें' : 'Sign In'}
+                      </button>
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground">
+                      {isHi ? 'नया खाता चाहिए?' : "Don't have an account?"}{' '}
+                      <button
+                        type="button"
+                        onClick={() => setTab('create')}
+                        className="font-bold text-amber-600 hover:underline dark:text-amber-400 cursor-pointer"
+                      >
+                        {isHi ? 'खाता बनाएँ' : 'Create Account'}
+                      </button>
+                    </span>
+                  )}
+                </div>
               </form>
             )}
           </div>

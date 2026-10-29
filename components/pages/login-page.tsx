@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, Sparkles, Lock, Mail, KeyRound, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, Check, Sparkles, Lock, Mail, KeyRound, ShieldCheck, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/brand/logo'
 import { localePath, type Locale } from '@/lib/i18n'
@@ -10,8 +10,9 @@ import { cn } from '@/lib/utils'
 
 export function LoginPage({ locale }: { locale: Locale }) {
   const isHi = locale === 'hi'
-  const [tab, setTab] = useState<'subscribe' | 'login'>('subscribe')
+  const [tab, setTab] = useState<'create' | 'login'>('create')
   const [tier, setTier] = useState<'free' | 'patron'>('patron')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -83,24 +84,24 @@ export function LoginPage({ locale }: { locale: Locale }) {
           </div>
         </div>
 
-        {/* Right Side: Interactive Form / Membership card */}
+        {/* Right Side: Interactive Form / Account Creation Card */}
         <div className="flex flex-col rounded-3xl border border-border/80 bg-card p-6 shadow-xl shadow-purple-500/5 backdrop-blur md:p-8 lg:col-span-6">
-          {/* Tabs */}
+          {/* Tabs: Create Account vs Sign In */}
           <div className="grid grid-cols-2 rounded-2xl bg-muted p-1 text-sm font-bold">
             <button
               type="button"
               onClick={() => {
-                setTab('subscribe')
+                setTab('create')
                 setSubmitted(false)
               }}
               className={cn(
                 'rounded-xl py-2.5 transition-all duration-200 cursor-pointer',
-                tab === 'subscribe'
+                tab === 'create'
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
-              {isHi ? 'सब्सक्राइब करें' : 'Subscribe'}
+              {isHi ? 'खाता बनाएँ' : 'Create Account'}
             </button>
             <button
               type="button"
@@ -125,7 +126,13 @@ export function LoginPage({ locale }: { locale: Locale }) {
                 <ShieldCheck className="size-8" />
               </span>
               <h3 className="text-2xl font-black">
-                {isHi ? 'स्वागत है!' : 'Welcome Aboard!'}
+                {tab === 'create'
+                  ? isHi
+                    ? 'खाता सफलतापूर्वक बन गया!'
+                    : 'Account Created Successfully!'
+                  : isHi
+                  ? 'लॉगिन सफल रहा!'
+                  : 'Welcome Back!'}
               </h3>
               <p className="max-w-sm text-sm text-muted-foreground">
                 {isHi
@@ -140,7 +147,8 @@ export function LoginPage({ locale }: { locale: Locale }) {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-              {tab === 'subscribe' && (
+              {/* Plan Tiers (Free vs Patron) */}
+              {tab === 'create' && (
                 <div className="grid grid-cols-2 gap-3 pb-2">
                   <button
                     type="button"
@@ -172,10 +180,10 @@ export function LoginPage({ locale }: { locale: Locale }) {
                     )}
                   >
                     <span className="absolute top-2 right-2 rounded-full bg-gradient-to-r from-[#9333EA] to-[#0EA5E9] px-1.5 py-0.5 text-[9px] font-black uppercase text-white">
-                      Popular
+                      POPULAR
                     </span>
                     <span className="text-xs font-bold text-[#8B5CF6]">
-                      {isHi ? 'अंतर यात्रा संरक्षक' : 'Patron'}
+                      {isHi ? 'संरक्षक' : 'Patron'}
                     </span>
                     <span className="text-base font-black">₹199<span className="text-xs font-normal text-muted-foreground">/mo</span></span>
                     <span className="text-[11px] text-muted-foreground">
@@ -185,9 +193,30 @@ export function LoginPage({ locale }: { locale: Locale }) {
                 </div>
               )}
 
+              {/* Name (for Create Account) */}
+              {tab === 'create' && (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground" htmlFor="auth-name">
+                    {isHi ? 'पूरा नाम (वैकल्पिक)' : 'FULL NAME'}
+                  </label>
+                  <div className="relative">
+                    <User className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      id="auth-name"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder={isHi ? 'अपना नाम दर्ज करें' : 'Your name'}
+                      className="h-11 w-full rounded-xl border bg-background pr-4 pl-10 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Email Address */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground" htmlFor="auth-email">
-                  {isHi ? 'ईमेल पता' : 'Email Address'}
+                  {isHi ? 'ईमेल पता' : 'EMAIL ADDRESS'}
                 </label>
                 <div className="relative">
                   <Mail className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -203,44 +232,46 @@ export function LoginPage({ locale }: { locale: Locale }) {
                 </div>
               </div>
 
-              {tab === 'login' && (
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground" htmlFor="auth-pwd">
-                      {isHi ? 'पासवर्ड' : 'Password'}
-                    </label>
+              {/* Password */}
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground" htmlFor="auth-pwd">
+                    {isHi ? 'पासवर्ड' : 'PASSWORD'}
+                  </label>
+                  {tab === 'login' && (
                     <button type="button" className="text-xs font-semibold text-primary hover:underline">
                       {isHi ? 'पासवर्ड भूल गए?' : 'Forgot password?'}
                     </button>
-                  </div>
-                  <div className="relative">
-                    <KeyRound className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-                    <input
-                      id="auth-pwd"
-                      type="password"
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="h-11 w-full rounded-xl border bg-background pr-4 pl-10 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
-                    />
-                  </div>
+                  )}
                 </div>
-              )}
+                <div className="relative">
+                  <KeyRound className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    id="auth-pwd"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="h-11 w-full rounded-xl border bg-background pr-4 pl-10 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+              </div>
 
+              {/* Submit CTA */}
               <Button
                 type="submit"
                 size="lg"
-                className="mt-2 h-12 w-full rounded-xl font-bold bg-gradient-to-r from-[#9333EA] to-[#0EA5E9] text-white shadow-lg shadow-purple-500/20 hover:opacity-95 active:scale-95 transition-all"
+                className="mt-2 h-12 w-full rounded-xl font-bold bg-gradient-to-r from-[#9333EA] to-[#0EA5E9] text-white shadow-lg shadow-purple-500/20 hover:opacity-95 active:scale-95 transition-all cursor-pointer"
               >
-                {tab === 'subscribe'
+                {tab === 'create'
                   ? isHi
                     ? tier === 'patron'
-                      ? 'अंतर यात्रा मेंबरशिप लें (₹199)'
-                      : 'मुफ़्त सब्सक्राइब करें'
+                      ? 'खाता बनाएँ व संरक्षक बनें (₹199)'
+                      : 'मुफ़्त खाता बनाएँ'
                     : tier === 'patron'
                     ? 'Join Antar Yatra Patron (₹199)'
-                    : 'Subscribe for Free'
+                    : 'Create Free Account'
                   : isHi
                   ? 'लॉगिन करें'
                   : 'Sign In to Account'}
@@ -251,6 +282,33 @@ export function LoginPage({ locale }: { locale: Locale }) {
                   ? 'जारी रखकर आप हमारी सेवा की शर्तें और गोपनीयता नीति स्वीकार करते हैं।'
                   : 'By continuing you agree to our Terms of Service & Privacy Policy.'}
               </p>
+
+              {/* Switch Helper */}
+              <div className="text-center pt-1 text-xs">
+                {tab === 'create' ? (
+                  <span className="text-muted-foreground">
+                    {isHi ? 'पहले से खाता है?' : 'Already have an account?'}{' '}
+                    <button
+                      type="button"
+                      onClick={() => setTab('login')}
+                      className="font-bold text-primary hover:underline cursor-pointer"
+                    >
+                      {isHi ? 'लॉगिन करें' : 'Sign In'}
+                    </button>
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">
+                    {isHi ? 'नया खाता चाहिए?' : "Don't have an account?"}{' '}
+                    <button
+                      type="button"
+                      onClick={() => setTab('create')}
+                      className="font-bold text-primary hover:underline cursor-pointer"
+                    >
+                      {isHi ? 'खाता बनाएँ' : 'Create Account'}
+                    </button>
+                  </span>
+                )}
+              </div>
             </form>
           )}
         </div>
