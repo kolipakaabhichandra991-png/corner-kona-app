@@ -5,7 +5,9 @@ import type { Episode } from '@/lib/content/types'
 import { getDictionary, localePath, type Locale } from '@/lib/i18n'
 import { sectionStyle } from '@/lib/sections'
 import { cn } from '@/lib/utils'
+import { brand } from '@/config/brand'
 import { LikeButton } from '@/components/like-button'
+import { ShareButtons } from '@/components/share-buttons'
 import { FormatChips } from '@/components/home/format-chips'
 import { EpisodeCard } from '@/components/home/episode-card'
 import { MediaStage } from './media-stage'
@@ -21,6 +23,8 @@ export async function EpisodePage({ locale, episode, view }: { locale: Locale; e
   ])
   const related = pool.filter((e) => e.id !== episode.id).slice(0, 4)
   const backHref = localePath(locale, episode.premium ? '/antar-yatra' : '/podcasts')
+
+  const shareUrl = `${brand.url}${localePath(locale, `/podcasts/${episode.slug}`)}`
 
   return (
     <div className="flex flex-col gap-14 pb-16">
@@ -62,6 +66,17 @@ export async function EpisodePage({ locale, episode, view }: { locale: Locale; e
             </span>
             <LikeButton id={episode.id} label={locale === 'hi' ? 'पसंद करें' : 'Like'} size={18} />
           </div>
+          <ShareButtons
+            url={shareUrl}
+            title={episode.title[locale]}
+            labels={{
+              share: t.pages.share,
+              whatsapp: t.pages.shareWhatsapp,
+              twitter: t.pages.shareTwitter,
+              copyLink: t.pages.copyLink,
+              copied: t.pages.linkCopied,
+            }}
+          />
           <FormatChips locale={locale} t={t} formats={episode.formats} />
           <EpisodePlayAction locale={locale} episode={episode} />
           {episode.premium && (

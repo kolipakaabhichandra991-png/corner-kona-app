@@ -6,7 +6,9 @@ import type { Category, Story } from '@/lib/content/types'
 import { getDictionary, localePath, type Locale } from '@/lib/i18n'
 import { sectionStyle } from '@/lib/sections'
 import { cn } from '@/lib/utils'
+import { brand } from '@/config/brand'
 import { LikeButton } from '@/components/like-button'
+import { ShareButtons } from '@/components/share-buttons'
 import { FormatChips } from '@/components/home/format-chips'
 import { StoryCard } from '@/components/home/story-card'
 
@@ -17,6 +19,8 @@ export async function StoryPage({ locale, story, category }: { locale: Locale; s
   const published = new Intl.DateTimeFormat(locale === 'hi' ? 'hi-IN' : 'en-IN', { dateStyle: 'long' }).format(
     new Date(story.publishedAt),
   )
+
+  const shareUrl = `${brand.url}${localePath(locale, `/${category.slug}/${story.slug}`)}`
 
   return (
     <div className="flex flex-col gap-14 pb-16">
@@ -42,6 +46,17 @@ export async function StoryPage({ locale, story, category }: { locale: Locale; s
           </div>
           <LikeButton id={story.id} label={locale === 'hi' ? 'पसंद करें' : 'Like'} size={18} />
         </div>
+        <ShareButtons
+          url={shareUrl}
+          title={story.title[locale]}
+          labels={{
+            share: t.pages.share,
+            whatsapp: t.pages.shareWhatsapp,
+            twitter: t.pages.shareTwitter,
+            copyLink: t.pages.copyLink,
+            copied: t.pages.linkCopied,
+          }}
+        />
         <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-muted">
           <Image src={story.image || '/placeholder.svg'} alt="" fill priority sizes="(min-width: 768px) 768px, 100vw" className="object-cover" />
         </div>
