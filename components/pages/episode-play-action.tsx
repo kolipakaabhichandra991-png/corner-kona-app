@@ -10,10 +10,17 @@ import {
   X,
 } from 'lucide-react'
 
+import { cn } from '@/lib/utils' // adjust if your path differs
 import type { Episode } from '@/lib/content/types'
 import { useAudio } from '@/components/audio/audio-context'
 import type { Locale } from '@/lib/i18n'
-import { cn } from '@/lib/utils'
+
+function getYouTubeId(url: string) {
+  const m = url.match(
+    /(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/
+  )
+  return m ? m[1] : null
+}
 
 export function EpisodePlayAction({
   locale,
@@ -46,9 +53,13 @@ export function EpisodePlayAction({
     (f) => f.format === 'video'
   )?.href
 
+  const ytId = videoUrl ? getYouTubeId(videoUrl) : null
+
   const isHi = locale === 'hi'
 
+  // Listen Audio: close video, then play/pause audio
   const handlePlayClick = () => {
+    setShowVideo(false)
     if (isThisCurrent) {
       togglePlay()
     } else {
@@ -56,6 +67,7 @@ export function EpisodePlayAction({
     }
   }
 
+  // Watch Video: pause audio, then open video
   const handleWatchVideo = () => {
     pauseTrack()
     setShowVideo(true)
@@ -64,7 +76,6 @@ export function EpisodePlayAction({
   return (
     <div className="flex flex-col gap-3 pt-2">
       <div className="flex flex-wrap items-center gap-3">
-
         {audioUrl && (
           <button
             type="button"
@@ -83,8 +94,12 @@ export function EpisodePlayAction({
             )}
 
             {isThisPlaying
-              ? isHi ? 'ऑडियो रोकें' : 'Pause Audio'
-              : isHi ? 'अभी सुनें' : 'Listen Now'}
+              ? isHi
+                ? 'ऑडियो रोकें'
+                : 'Pause Audio'
+              : isHi
+                ? 'अभी सुनें'
+                : 'Listen Now'}
           </button>
         )}
 
@@ -107,12 +122,10 @@ export function EpisodePlayAction({
           <FileText className="size-4 text-purple-500" />
           {isHi ? 'ट्रांसक्रिप्ट देखें' : 'Synchronized Transcript'}
         </button>
-
       </div>
 
       {showVideo && videoUrl && (
         <div className="w-full overflow-hidden rounded-2xl border bg-black">
-
           <div className="flex items-center justify-between p-3 text-white">
             <span className="font-bold">
               {isHi ? 'वीडियो प्लेयर' : 'Video Player'}
@@ -128,18 +141,30 @@ export function EpisodePlayAction({
             </button>
           </div>
 
-          <video
-            key={videoUrl}
-            src={videoUrl}
-            controls
-            autoPlay
-            playsInline
-            preload="metadata"
-            className="aspect-video w-full bg-black"
-          >
-            Your browser does not support video playback.
-          </video>
-
+          {ytId ? (
+            <div className="aspect-video w-full">
+              <iframe
+                key={ytId}
+                className="size-full"
+                src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`}
+                title={episode.title}
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                allowFullScreen
+              />
+            </div>
+          ) : (
+            <video
+              key={videoUrl}
+              src={videoUrl}
+              controls
+              autoPlay
+              playsInline
+              preload="metadata"
+              className="aspect-video w-full bg-black"
+            >
+              Your browser does not support video playback.
+            </video>
+          )}
         </div>
       )}
 
