@@ -12,6 +12,7 @@ import { FormatChips } from '@/components/home/format-chips'
 import { EpisodeCard } from '@/components/home/episode-card'
 import { MediaStage } from './media-stage'
 import { EpisodePlayAction } from './episode-play-action'
+import { ChapterList } from '@/components/audio/chapter-list'
 
 export async function EpisodePage({ locale, episode, view }: { locale: Locale; episode: Episode; view?: string }) {
   const t = getDictionary(locale)
@@ -79,6 +80,9 @@ export async function EpisodePage({ locale, episode, view }: { locale: Locale; e
           />
           <FormatChips locale={locale} t={t} formats={episode.formats} />
           <EpisodePlayAction locale={locale} episode={episode} />
+          {episode.chapters && episode.chapters.length > 0 && (
+            <ChapterList episode={episode} locale={locale} />
+          )}
           {episode.premium && (
             <Link
               href={localePath(locale, '/antar-yatra')}
