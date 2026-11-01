@@ -16,7 +16,7 @@ export interface AudioContextType {
   transcriptLanguage: 'both' | 'hi' | 'en'
   transcripts: TranscriptLine[]
   activeTranscriptLine: TranscriptLine | null
-  playTrack: (episode: Episode, autoOpenTranscript?: boolean) => void
+  playTrack: (episode: Episode, autoOpenTranscript?: boolean, startTime?: number) => void
   pauseTrack: () => void
   togglePlay: () => void
   seek: (seconds: number) => void
@@ -31,6 +31,63 @@ export interface AudioContextType {
 
 const AudioContext = createContext<AudioContextType | null>(null)
 
+// LocalStorage helpers with try/catch and SSR safety
+function getSavedProgress(episodeId: string, trackDuration: number): number {
+  try {
+    if (typeof window === 'undefined') return 0
+    const raw = localStorage.getItem(`ck-progress-${episodeId}`)
+    if (!raw) return 0
+    const val = parseFloat(raw)
+    if (isNaN(val) || val <= 0 || val >= trackDuration - 3) {
+      localStorage.removeItem(`ck-progress-${episodeId}`)
+      return 0
+    }
+    return val
+  } catch {
+    return 0
+  }
+}
+
+function saveProgress(episodeId: string, time: number, trackDuration: number) {
+  try {
+    if (typeof window === 'undefined') return
+    if (time >= trackDuration - 3) {
+      localStorage.removeItem(`ck-progress-${episodeId}`)
+    } else if (time > 0) {
+      localStorage.setItem(`ck-progress-${episodeId}`, String(time))
+    }
+  } catch {
+    // ignore
+  }
+}
+
+function clearProgress(episodeId: string) {
+  try {
+    if (typeof window === 'undefined') return
+    localStorage.removeItem(`ck-progress-${episodeId}`)
+  } catch {
+    // ignore
+  }
+}
+
+function saveLastTrack(episode: Episode) {
+  try {
+    if (typeof window === 'undefined') return
+    localStorage.setItem('ck-last-track', JSON.stringify(episode))
+  } catch {
+    // ignore
+  }
+}
+
+function clearLastTrack() {
+  try {
+    if (typeof window === 'undefined') return
+    localStorage.removeItem('ck-last-track')
+  } catch {
+    // ignore
+  }
+}
+
 export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [currentTrack, setCurrentTrack] = useState<Episode | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -43,8 +100,56 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [transcriptLanguage, setTranscriptLanguage] = useState<'both' | 'hi' | 'en'>('both')
   const [transcripts, setTranscripts] = useState<TranscriptLine[]>([])
 
+  // Live mutable refs to avoid stale closures in event listeners & timer callbacks
+  const currentTrackRef = useRef<Episode | null>(null)
+  const currentTimeRef = useRef(0)
+  const durationRef = useRef(duration)
+
+  useEffect(() => {
+    currentTrackRef.current = currentTrack
+  }, [currentTrack])
+
+  useEffect(() => {
+    currentTimeRef.current = currentTime
+  }, [currentTime])
+
+  useEffect(() => {
+    durationRef.current = duration
+  }, [duration])
+
+  // Restore last-played track and saved position on page load (paused, no autoplay)
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined') return
+      const saved = localStorage.getItem('ck-last-track')
+      if (!saved) return
+      const track = JSON.parse(saved) as Episode
+      if (!track || !track.id || !track.slug) return
+
+      const transcriptList = getTranscriptForSlug(
+        track.slug,
+        track.title?.hi ?? '',
+        track.title?.en ?? ''
+      )
+      const maxEnd = transcriptList.length ? transcriptList[transcriptList.length - 1].end : 60
+      const trackDuration = Math.max(maxEnd, 54)
+      const savedPos = getSavedProgress(track.id, trackDuration)
+
+      setCurrentTrack(track)
+      currentTrackRef.current = track
+      setTranscripts(transcriptList)
+      setDuration(trackDuration)
+      durationRef.current = trackDuration
+      setCurrentTime(savedPos)
+      currentTimeRef.current = savedPos
+      setIsPlaying(false) // Restore in paused state
+    } catch {
+      // ignore
+    }
+  }, [])
+
   // Web Audio ambient tone generator for realistic audio output
-  const audioCtxRef = useRef<AudioContext | null>(null)
+  const audioCtxRef = useRef<globalThis.AudioContext | null>(null)
   const gainNodeRef = useRef<GainNode | null>(null)
   const osc1Ref = useRef<OscillatorNode | null>(null)
   const osc2Ref = useRef<OscillatorNode | null>(null)
@@ -71,7 +176,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     (isAntar: boolean) => {
       try {
         const AudioContextClass =
-          window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+          window.AudioContext || (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext
         if (!AudioContextClass) return
 
         if (!audioCtxRef.current || audioCtxRef.current.state === 'closed') {
@@ -124,6 +229,38 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     }
   }, [volume, isMuted])
 
+  // Periodic progress saving while playing (~1 sec)
+  useEffect(() => {
+    if (!isPlaying) return
+    const interval = window.setInterval(() => {
+      if (currentTrackRef.current) {
+        saveProgress(
+          currentTrackRef.current.id,
+          currentTimeRef.current,
+          durationRef.current
+        )
+      }
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [isPlaying])
+
+  // Save progress on page unload
+  useEffect(() => {
+    const handleUnload = () => {
+      if (currentTrackRef.current) {
+        saveProgress(
+          currentTrackRef.current.id,
+          currentTimeRef.current,
+          durationRef.current
+        )
+      }
+    }
+    window.addEventListener('beforeunload', handleUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload)
+    }
+  }, [])
+
   // Playback timer ticker
   useEffect(() => {
     if (!isPlaying) {
@@ -139,6 +276,9 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         const next = prev + 0.5 * playbackRate
         if (next >= duration) {
           setIsPlaying(false)
+          if (currentTrackRef.current) {
+            clearProgress(currentTrackRef.current.id)
+          }
           return 0
         }
         return next
@@ -159,46 +299,91 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     null
 
   const playTrack = useCallback(
-    (episode: Episode, autoOpenTranscript = false) => {
-      if (currentTrack?.id === episode.id) {
+    (episode: Episode, autoOpenTranscript = false, startTime?: number) => {
+      const transcriptList = getTranscriptForSlug(episode.slug, episode.title.hi, episode.title.en)
+      const maxEnd = transcriptList.length ? transcriptList[transcriptList.length - 1].end : 60
+      const trackDuration = Math.max(maxEnd, 54)
+
+      if (currentTrackRef.current?.id === episode.id) {
+        if (startTime !== undefined) {
+          const clamped = Math.max(0, Math.min(startTime, trackDuration))
+          setCurrentTime(clamped)
+          currentTimeRef.current = clamped
+          saveProgress(episode.id, clamped, trackDuration)
+        }
         setIsPlaying(true)
+        saveLastTrack(episode)
         if (autoOpenTranscript) setTranscriptOpen(true)
         return
       }
 
+      // If switching from another track, save previous track's position
+      if (currentTrackRef.current) {
+        saveProgress(
+          currentTrackRef.current.id,
+          currentTimeRef.current,
+          durationRef.current
+        )
+      }
+
+      const initialPos =
+        startTime !== undefined
+          ? Math.max(0, Math.min(startTime, trackDuration))
+          : getSavedProgress(episode.id, trackDuration)
+
       setCurrentTrack(episode)
-      setCurrentTime(0)
-      const transcriptList = getTranscriptForSlug(episode.slug, episode.title.hi, episode.title.en)
+      currentTrackRef.current = episode
       setTranscripts(transcriptList)
-      const maxEnd = transcriptList.length ? transcriptList[transcriptList.length - 1].end : 60
-      setDuration(Math.max(maxEnd, 54))
+      setDuration(trackDuration)
+      durationRef.current = trackDuration
+      setCurrentTime(initialPos)
+      currentTimeRef.current = initialPos
       setIsPlaying(true)
+      saveLastTrack(episode)
       if (autoOpenTranscript) setTranscriptOpen(true)
     },
-    [currentTrack]
+    []
   )
 
   const pauseTrack = useCallback(() => {
     setIsPlaying(false)
+    if (currentTrackRef.current) {
+      saveProgress(
+        currentTrackRef.current.id,
+        currentTimeRef.current,
+        durationRef.current
+      )
+    }
   }, [])
 
   const togglePlay = useCallback(() => {
-    setIsPlaying((prev) => !prev)
+    setIsPlaying((prev) => {
+      const next = !prev
+      if (!next && currentTrackRef.current) {
+        saveProgress(
+          currentTrackRef.current.id,
+          currentTimeRef.current,
+          durationRef.current
+        )
+      }
+      return next
+    })
   }, [])
 
-  const seek = useCallback(
-    (seconds: number) => {
-      const clamped = Math.max(0, Math.min(seconds, duration))
-      setCurrentTime(clamped)
-    },
-    [duration]
-  )
+  const seek = useCallback((seconds: number) => {
+    const clamped = Math.max(0, Math.min(seconds, durationRef.current))
+    setCurrentTime(clamped)
+    currentTimeRef.current = clamped
+    if (currentTrackRef.current) {
+      saveProgress(currentTrackRef.current.id, clamped, durationRef.current)
+    }
+  }, [])
 
   const skip = useCallback(
     (delta: number) => {
-      seek(currentTime + delta)
+      seek(currentTimeRef.current + delta)
     },
-    [currentTime, seek]
+    [seek]
   )
 
   const setPlaybackRate = useCallback((rate: number) => {
@@ -215,6 +400,14 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const closePlayer = useCallback(() => {
+    if (currentTrackRef.current) {
+      saveProgress(
+        currentTrackRef.current.id,
+        currentTimeRef.current,
+        durationRef.current
+      )
+    }
+    clearLastTrack()
     setIsPlaying(false)
     setCurrentTrack(null)
     setTranscriptOpen(false)

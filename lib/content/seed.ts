@@ -221,6 +221,28 @@ export const episodes: Episode[] = [
     language: 'hi',
     publishedAt: minutesAgo(2400),
     formats: [{ format: 'audio', href: '/podcasts/subah-ki-chai' }],
+    chapters: [
+      {
+        id: 'ch-1',
+        title: { hi: 'शुरुआत: सुबह की पहली किरण', en: 'Introduction: First Light' },
+        start: 0,
+      },
+      {
+        id: 'ch-2',
+        title: { hi: 'चाय की खुशबू और यादें', en: 'Aroma of Chai & Memories' },
+        start: 12,
+      },
+      {
+        id: 'ch-3',
+        title: { hi: 'जागता हुआ शहर', en: 'The Awakening City' },
+        start: 25,
+      },
+      {
+        id: 'ch-4',
+        title: { hi: 'दिन की नई शुरुआत', en: 'A Fresh Beginning' },
+        start: 40,
+      },
+    ],
   },
   {
     id: 'ep-5',
@@ -338,7 +360,7 @@ export const stories: Story[] = [
     readMin: 4,
     publishedAt: minutesAgo(2100),
     formats: [{ format: 'audio', href: '/podcasts/subah-ki-chai' }],
-  },
+      },
   {
     id: 'st-6',
     slug: 'ai-revolution-bharat',

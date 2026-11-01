@@ -35,11 +35,16 @@ export function loadStore(): ContentStoreData {
     if (fs.existsSync(STORE_PATH)) {
       const raw = fs.readFileSync(STORE_PATH, 'utf8')
       const parsed = JSON.parse(raw)
-      // Merge with seed categories to make sure all 12 categories are always present
+      // Merge with seed categories and chapters
+      const baseEpisodes = parsed.episodes && parsed.episodes.length > 0 ? parsed.episodes : episodes
       memoryStore = {
         ...getInitialData(),
         ...parsed,
         categories: parsed.categories && parsed.categories.length > 0 ? parsed.categories : categories,
+        episodes: baseEpisodes.map((ep: Episode) => {
+          const seedEp = episodes.find((s) => s.id === ep.id)
+          return seedEp?.chapters && !ep.chapters ? { ...ep, chapters: seedEp.chapters } : ep
+        }),
       }
       return memoryStore
     }

@@ -29,6 +29,12 @@ export interface MediaLink {
   href: string
 }
 
+export interface Chapter {
+  id: string
+  title: Localized
+  start: number
+}
+
 export interface Episode {
   id: string
   slug: string
@@ -42,6 +48,7 @@ export interface Episode {
   language: Locale
   publishedAt: string
   formats: MediaLink[]
+  chapters?: { id: string; title: Localized; start: number }[]
 }
 
 export interface Story {

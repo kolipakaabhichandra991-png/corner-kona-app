@@ -62,6 +62,13 @@ export function StickyAudioDock({ locale }: { locale: Locale }) {
 
   const isHi = locale === 'hi'
 
+  const currentChapter = currentTrack.chapters?.length
+    ? [...currentTrack.chapters]
+        .sort((a, b) => a.start - b.start)
+        .filter((ch) => currentTime >= ch.start)
+        .pop()
+    : null
+
   return (
     <aside
       aria-label="Audio Player Dock"
@@ -135,6 +142,11 @@ export function StickyAudioDock({ locale }: { locale: Locale }) {
               </div>
               <h4 className="truncate font-display text-xs font-black sm:text-sm text-foreground">
                 {currentTrack.title[locale]}
+                {currentChapter && (
+                  <span className="ml-1.5 font-normal text-xs text-muted-foreground">
+                    • {currentChapter.title[locale]}
+                  </span>
+                )}
               </h4>
               {/* Active karaoke spoken line snippet */}
               {activeTranscriptLine && (
