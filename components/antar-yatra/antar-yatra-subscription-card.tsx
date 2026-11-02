@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Sparkles,
@@ -15,6 +15,12 @@ import {
   Eye,
   EyeOff,
   CheckCircle2,
+  Crown,
+  Calendar,
+  LogOut,
+  CreditCard,
+  Shield,
+  Download,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
@@ -47,6 +53,57 @@ export function AntarYatraSubscriptionCard({
   const [agreeTerms, setAgreeTerms] = useState(true)
   const [submitted, setSubmitted] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
+  
+  // Logged-in Patron Subscription State
+  const [isPatronSubscribed, setIsPatronSubscribed] = useState<boolean>(false)
+  const [managePlanOpen, setManagePlanOpen] = useState(false)
+  const [subscribedUser, setSubscribedUser] = useState({
+    name: isHi ? 'आदित्य वर्मा' : 'Aaditya Verma',
+    email: 'aaditya.verma@example.com',
+    phone: '+91 98765 43210',
+    plan: isHi ? 'वार्षिक संरक्षक पास (Annual Patron)' : 'Annual Patron Pass',
+    validUntil: isHi ? 'नवंबर 2027' : 'November 2027',
+  })
+
+  // Detect session in localStorage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('ck_auth_user')
+      if (stored) {
+        const u = JSON.parse(stored)
+        if (u.isSubscribed) {
+          setIsPatronSubscribed(true)
+          if (u.name) {
+            setSubscribedUser((prev) => ({
+              ...prev,
+              name: u.name,
+              email: u.email || prev.email,
+              phone: u.phone || prev.phone,
+            }))
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  const handleToggleDemoState = () => {
+    const nextState = !isPatronSubscribed
+    setIsPatronSubscribed(nextState)
+    try {
+      if (nextState) {
+        localStorage.setItem(
+          'ck_auth_user',
+          JSON.stringify({ isSubscribed: true, name: subscribedUser.name, email: subscribedUser.email, phone: subscribedUser.phone })
+        )
+      } else {
+        localStorage.removeItem('ck_auth_user')
+      }
+    } catch {
+      // ignore
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -203,6 +260,131 @@ export function AntarYatraSubscriptionCard({
 
           {/* Right Column: Standard, Full-Featured Create Account & Sign In Card */}
           <div className="flex flex-col rounded-3xl border border-amber-500/30 bg-background/95 p-6 text-foreground shadow-2xl backdrop-blur md:p-8 lg:col-span-6">
+            {/* Demo / State Switcher for Testing */}
+            <div className="flex items-center justify-between pb-3 mb-2 border-b border-border/50 text-[11px]">
+              <span className="font-bold text-muted-foreground flex items-center gap-1.5">
+                <span>{isHi ? 'दृश्य मोड:' : 'View Mode:'}</span>
+                <span className={cn('px-2 py-0.5 rounded-full font-black', isPatronSubscribed ? 'bg-amber-500/15 text-amber-500' : 'bg-muted text-muted-foreground')}>
+                  {isPatronSubscribed ? (isHi ? '★ सक्रिय संरक्षक (Subscribed)' : '★ Active Patron') : (isHi ? 'अतिथि (Guest)' : 'Guest')}
+                </span>
+              </span>
+              <button
+                type="button"
+                onClick={handleToggleDemoState}
+                className="text-primary hover:underline font-bold cursor-pointer"
+              >
+                {isPatronSubscribed ? (isHi ? 'अतिथि रूप में देखें' : 'View as Guest') : (isHi ? 'सब्सक्राइब के रूप में देखें' : 'Test Subscribed View')}
+              </button>
+            </div>
+
+            {isPatronSubscribed ? (
+              /* SUBSCRIBED PATRON PORTAL */
+              <div className="flex flex-col gap-6 animate-rise">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3.5">
+                    <div className="relative">
+                      <div className="grid size-14 place-items-center rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-400 text-stone-950 font-black text-xl shadow-lg ring-4 ring-amber-500/20">
+                        {subscribedUser.name.charAt(0)}
+                      </div>
+                      <span className="absolute -bottom-1 -right-1 grid size-5 place-items-center rounded-full bg-amber-500 text-stone-950 shadow">
+                        <Crown className="size-3 fill-stone-950" />
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-display text-lg font-black text-foreground">
+                          {subscribedUser.name}
+                        </h3>
+                        <span className="rounded-full bg-amber-500/20 border border-amber-500/40 px-2 py-0.5 text-[10px] font-black uppercase text-amber-600 dark:text-amber-400">
+                          Active Patron
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">{subscribedUser.email}</p>
+                      <p className="text-xs text-muted-foreground">{subscribedUser.phone}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Plan Status Box */}
+                <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent p-4 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-bold">
+                    <span className="text-muted-foreground">{isHi ? 'सदस्यता प्लान:' : 'Current Plan:'}</span>
+                    <span className="text-foreground font-black">{subscribedUser.plan}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs font-bold">
+                    <span className="text-muted-foreground">{isHi ? 'नवीनीकरण तिथि:' : 'Next Renewal:'}</span>
+                    <span className="text-emerald-500">{subscribedUser.validUntil}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs font-bold">
+                    <span className="text-muted-foreground">{isHi ? 'स्थिति:' : 'Membership Status:'}</span>
+                    <span className="inline-flex items-center gap-1 text-emerald-500">
+                      <CheckCircle2 className="size-3.5" />
+                      {isHi ? 'सक्रिय (Auto-Renew On)' : 'Active (Auto-Renew On)'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Active Privileges */}
+                <div className="space-y-2 text-xs">
+                  <span className="font-bold text-muted-foreground uppercase tracking-wider text-[10px]">
+                    {isHi ? 'आपके अनलॉक किए गए लाभ' : 'Your Unlocked Privileges'}
+                  </span>
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="flex items-center gap-2 rounded-xl bg-muted/40 p-2.5">
+                      <CheckCircle2 className="size-4 text-emerald-500 shrink-0" />
+                      <span className="font-medium text-foreground">
+                        {isHi ? 'सभी 24+ आध्यात्मिक ऑडियो जर्नी अनलॉक' : 'All 24+ Antar Yatra episodes fully unlocked'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 rounded-xl bg-muted/40 p-2.5">
+                      <CheckCircle2 className="size-4 text-emerald-500 shrink-0" />
+                      <span className="font-medium text-foreground">
+                        {isHi ? '100% विज्ञापन-मुक्त उच्च गुणवत्ता स्ट्रीमिंग' : '100% Ad-free lossless audio streaming'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 rounded-xl bg-muted/40 p-2.5">
+                      <CheckCircle2 className="size-4 text-emerald-500 shrink-0" />
+                      <span className="font-medium text-foreground">
+                        {isHi ? 'द्विभाषी वास्तविक-समय ट्रांसक्रिप्ट्स' : 'Synchronized bilingual transcript sheets'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <Link
+                    href={localePath(locale, '/antar-yatra')}
+                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 py-3 text-xs font-bold text-stone-950 shadow-md hover:opacity-95 transition-all text-center"
+                  >
+                    <Sparkles className="size-4 fill-stone-950" />
+                    <span>{isHi ? 'एपिसोड्स सुनें' : 'Explore Episodes'}</span>
+                  </Link>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setManagePlanOpen(true)}
+                    className="rounded-full text-xs font-bold border-border/80"
+                  >
+                    <CreditCard className="size-3.5 mr-1.5" />
+                    {isHi ? 'प्लान विवरण' : 'Manage Plan'}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={handleToggleDemoState}
+                    className="rounded-full text-xs font-bold text-muted-foreground hover:text-foreground"
+                    title={isHi ? 'लॉगआउट' : 'Sign Out'}
+                  >
+                    <LogOut className="size-4" />
+                  </Button>
+                </div>
+              </div>
+            ) : (
+            <>
             {/* Top Navigation Tabs */}
             <div className="grid grid-cols-2 rounded-2xl bg-muted/80 p-1 text-sm font-bold">
               <button
@@ -580,6 +762,8 @@ export function AntarYatraSubscriptionCard({
                   )}
                 </div>
               </form>
+            )}
+            </>
             )}
           </div>
         </div>

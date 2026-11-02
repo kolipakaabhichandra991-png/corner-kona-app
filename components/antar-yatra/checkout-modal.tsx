@@ -87,6 +87,14 @@ export function CheckoutModal({
         localStorage.setItem('ck_patron_tier', selectedPlan)
         localStorage.setItem('ck_patron_active', 'true')
         localStorage.setItem('ck_patron_date', new Date().toISOString())
+        localStorage.setItem('ck_auth_user', JSON.stringify({
+          isSubscribed: true,
+          name: 'Aaditya Verma',
+          email: 'seeker@cornerkona.com',
+          phone: '+91 98765 43210',
+          plan: plans[selectedPlan].title,
+          validUntil: 'Nov 2027',
+        }))
       }
       setStep('success')
       if (onSuccess) onSuccess(selectedPlan)

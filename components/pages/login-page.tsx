@@ -36,6 +36,19 @@ export function LoginPage({ locale }: { locale: Locale }) {
     e.preventDefault()
     if (!email) return
     setSubmitted(true)
+    try {
+      const fullName = firstName ? `${firstName} ${lastName}`.trim() : email.split('@')[0]
+      localStorage.setItem('ck_auth_user', JSON.stringify({
+        isSubscribed: true,
+        name: fullName,
+        email,
+        phone: phone || '+91 98765 43210',
+        plan: isHi ? 'वार्षिक संरक्षक पास' : 'Annual Patron Pass',
+        validUntil: isHi ? 'नवंबर 2027' : 'Nov 2027',
+      }))
+    } catch {
+      // ignore
+    }
   }
 
   return (
