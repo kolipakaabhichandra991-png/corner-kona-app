@@ -11,6 +11,8 @@ import { LikeButton } from '@/components/like-button'
 import { ShareButtons } from '@/components/share-buttons'
 import { FormatChips } from '@/components/home/format-chips'
 import { StoryCard } from '@/components/home/story-card'
+import { CommentsSection } from '@/components/community/comments-section'
+import { ArticleJsonLd } from '@/components/seo/json-ld'
 
 export async function StoryPage({ locale, story, category }: { locale: Locale; story: Story; category: Category }) {
   const t = getDictionary(locale)
@@ -24,6 +26,7 @@ export async function StoryPage({ locale, story, category }: { locale: Locale; s
 
   return (
     <div className="flex flex-col gap-14 pb-16">
+      <ArticleJsonLd story={story} locale={locale} url={shareUrl} />
       <article className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 pt-6 md:pt-10">
         <Link
           href={localePath(locale, `/${category.slug}`)}
@@ -62,6 +65,26 @@ export async function StoryPage({ locale, story, category }: { locale: Locale; s
         </div>
         <FormatChips locale={locale} t={t} formats={story.formats} />
         <p className="text-lg leading-relaxed">{story.dek[locale]}</p>
+        <CommentsSection
+          contentId={story.id}
+          contentTitle={story.title[locale]}
+          locale={locale}
+          labels={{
+            commentsTitle: t.pages.commentsTitle,
+            commentsSubtitle: t.pages.commentsSubtitle,
+            writeComment: t.pages.writeComment,
+            yourName: t.pages.yourName,
+            postComment: t.pages.postComment,
+            reply: t.pages.reply,
+            replies: t.pages.replies,
+            replyPlaceholder: t.pages.replyPlaceholder,
+            sendReply: t.pages.sendReply,
+            cancel: t.pages.cancel,
+            report: t.pages.report,
+            reported: t.pages.reported,
+            verifiedReader: t.pages.verifiedReader,
+          }}
+        />
       </article>
 
       {more.length > 0 && (

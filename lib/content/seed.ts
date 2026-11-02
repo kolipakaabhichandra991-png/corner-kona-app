@@ -175,6 +175,7 @@ export const episodes: Episode[] = [
     premium: false,
     language: 'hi',
     publishedAt: minutesAgo(180),
+    youtubeId: 'M7lc1UVf-VE',
     formats: [
       { format: 'audio', href: '/podcasts/gully-se-world-cup' },
       { format: 'video', href: '/podcasts/gully-se-world-cup?view=video' },
@@ -194,6 +195,7 @@ export const episodes: Episode[] = [
     premium: false,
     language: 'hi',
     publishedAt: minutesAgo(600),
+    youtubeId: 'L_LUpnjgPso',
     formats: [
       { format: 'audio', href: '/podcasts/parde-ke-peeche' },
       { format: 'video', href: '/podcasts/parde-ke-peeche?view=video' },

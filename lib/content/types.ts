@@ -46,6 +46,7 @@ export interface Episode {
   premium: boolean
   language: Locale
   publishedAt: string
+  youtubeId?: string
   formats: MediaLink[]
 }
 

@@ -11,6 +11,7 @@ import { AudioProvider } from '@/components/audio/audio-context'
 import { StickyAudioDock } from '@/components/audio/sticky-audio-dock'
 import { BilingualTranscriptSheet } from '@/components/audio/bilingual-transcript-sheet'
 import { BackgroundPattern } from './background-pattern'
+import { WebSiteJsonLd } from '@/components/seo/json-ld'
 
 const baloo = Baloo_2({ subsets: ['latin', 'devanagari'], variable: '--font-baloo', display: 'swap' })
 const mukta = Mukta({
@@ -27,6 +28,7 @@ export async function RootShell({ locale, children }: { locale: Locale; children
   return (
     <html lang={locale} className={`${baloo.variable} ${mukta.variable} bg-background`} suppressHydrationWarning>
       <body className="min-h-dvh antialiased relative overflow-x-hidden bg-background text-foreground" data-locale={locale}>
+        <WebSiteJsonLd locale={locale} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AudioProvider>
             {/* Contextual Studio & Soundwave Background Pattern */}

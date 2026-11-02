@@ -22,6 +22,13 @@ import {
   Radio,
   RefreshCw,
   SlidersHorizontal,
+  MessageSquare,
+  BarChart3,
+  ShieldAlert,
+  CheckCircle2,
+  TrendingUp,
+  Users,
+  ArrowUpRight,
 } from 'lucide-react'
 import type { Category, CategoryKey, Episode, Short, Story } from '@/lib/content/types'
 import { brand } from '@/config/brand'
@@ -55,7 +62,77 @@ export function AdminDashboard({
   initialEpisodes,
 }: AdminDashboardProps) {
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState<'short' | 'story' | 'episode' | 'manage'>('short')
+  const [activeTab, setActiveTab] = useState<'short' | 'story' | 'episode' | 'manage' | 'comments' | 'analytics'>('short')
+
+  // Comments Moderation State
+  interface ModeratedComment {
+    id: string
+    author: string
+    content: string
+    contentTitle: string
+    createdAt: string
+    status: 'approved' | 'pending' | 'reported' | 'spam'
+    likes: number
+  }
+
+  const [moderationComments, setModerationComments] = useState<ModeratedComment[]>([
+    {
+      id: 'mod-1',
+      author: 'Aaditya Verma',
+      content: 'This perspective is truly eye-opening! Corner Kona’s narrative storytelling is leaps ahead.',
+      contentTitle: 'From Gully to World Cup',
+      createdAt: '2 hours ago',
+      status: 'approved',
+      likes: 24,
+    },
+    {
+      id: 'mod-2',
+      author: 'Anonymous Spammer',
+      content: 'Click here for free crypto giveaway at fake-crypto-link.com/win',
+      contentTitle: 'Behind the Curtain: 90 Days',
+      createdAt: '1 hour ago',
+      status: 'reported',
+      likes: 0,
+    },
+    {
+      id: 'mod-3',
+      author: 'Kabir Mehta',
+      content: 'Structuring deep research into bites that resonate with Gen-Z is exactly what was needed.',
+      contentTitle: 'Chip Wars: The World’s Most Expensive Battle',
+      createdAt: '4 hours ago',
+      status: 'approved',
+      likes: 19,
+    },
+    {
+      id: 'mod-4',
+      author: 'PromoBot',
+      content: 'Buy social media followers cheap! Fast delivery guaranteed 100%!',
+      contentTitle: 'Antar Yatra: Inner Peace Special',
+      createdAt: '30 mins ago',
+      status: 'spam',
+      likes: 0,
+    },
+  ])
+  const [commentFilter, setCommentFilter] = useState<'all' | 'reported' | 'approved' | 'spam'>('all')
+
+  const handleApproveComment = (id: string) => {
+    setModerationComments((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, status: 'approved' } : c))
+    )
+    setStatusMessage({ type: 'success', text: 'टिप्पणी स्वीकृत कर दी गई (Comment approved)' })
+  }
+
+  const handleMarkSpam = (id: string) => {
+    setModerationComments((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, status: 'spam' } : c))
+    )
+    setStatusMessage({ type: 'success', text: 'टिप्पणी को स्पैम चिन्हित किया गया (Marked as spam)' })
+  }
+
+  const handleDeleteComment = (id: string) => {
+    setModerationComments((prev) => prev.filter((c) => c.id !== id))
+    setStatusMessage({ type: 'success', text: 'टिप्पणी हटा दी गई (Comment deleted)' })
+  }
   const [manageFilter, setManageFilter] = useState<'all' | 'short' | 'story' | 'episode'>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -514,14 +591,47 @@ export function AdminDashboard({
           type="button"
           onClick={() => setActiveTab('manage')}
           className={cn(
-            'flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ml-auto',
+            'flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all',
             activeTab === 'manage'
               ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-600/30'
               : 'bg-muted/80 text-muted-foreground hover:text-foreground hover:bg-muted',
           )}
         >
           <Layers className="size-4" />
-          <span>📋 सामग्री प्रबंधन (Manage All Content)</span>
+          <span>📋 सामग्री प्रबंधन (Manage)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('comments')}
+          className={cn(
+            'flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all',
+            activeTab === 'comments'
+              ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-600/30'
+              : 'bg-muted/80 text-muted-foreground hover:text-foreground hover:bg-muted',
+          )}
+        >
+          <MessageSquare className="size-4" />
+          <span>💬 कमेंट मॉडरेशन (Comments)</span>
+          {moderationComments.filter(c => c.status === 'reported').length > 0 && (
+            <span className="grid size-4 place-items-center rounded-full bg-rose-500 text-[10px] font-black text-white">
+              {moderationComments.filter(c => c.status === 'reported').length}
+            </span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('analytics')}
+          className={cn(
+            'flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ml-auto',
+            activeTab === 'analytics'
+              ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-600/30'
+              : 'bg-muted/80 text-muted-foreground hover:text-foreground hover:bg-muted',
+          )}
+        >
+          <BarChart3 className="size-4" />
+          <span>📊 एनालिटिक्स (Analytics)</span>
         </button>
       </div>
 
@@ -953,6 +1063,270 @@ export function AdminDashboard({
                 </div>
               ))
             )}
+          </div>
+        </div>
+      )}
+      {/* 6. TAB 5: COMMENT MODERATION PANEL */}
+      {activeTab === 'comments' && (
+        <div className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-card/60 p-6 md:p-8 shadow-xl backdrop-blur-md">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-black">कम्युनिटी कमेंट मॉडरेशन (Community Comment Moderation)</h2>
+              <p className="text-xs text-muted-foreground">
+                पाठकों की टिप्पणियाँ पढ़ें, रिपोर्ट की गई टिप्पणियों की समीक्षा करें और स्पैम को फ़िल्टर करें।
+              </p>
+            </div>
+
+            {/* Filter Pills */}
+            <div className="flex flex-wrap items-center gap-2 mt-3 sm:mt-0">
+              <button
+                type="button"
+                onClick={() => setCommentFilter('all')}
+                className={cn(
+                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-colors',
+                  commentFilter === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted hover:bg-muted/80'
+                )}
+              >
+                सभी ({moderationComments.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setCommentFilter('reported')}
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-bold transition-colors',
+                  commentFilter === 'reported' ? 'bg-amber-500 text-white' : 'bg-muted text-amber-500 hover:bg-muted/80'
+                )}
+              >
+                <ShieldAlert className="size-3.5" />
+                रिपोर्टेड ({moderationComments.filter(c => c.status === 'reported').length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setCommentFilter('approved')}
+                className={cn(
+                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-colors',
+                  commentFilter === 'approved' ? 'bg-emerald-600 text-white' : 'bg-muted text-emerald-500 hover:bg-muted/80'
+                )}
+              >
+                स्वीकृत ({moderationComments.filter(c => c.status === 'approved').length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setCommentFilter('spam')}
+                className={cn(
+                  'rounded-xl px-3 py-1.5 text-xs font-bold transition-colors',
+                  commentFilter === 'spam' ? 'bg-rose-600 text-white' : 'bg-muted text-rose-500 hover:bg-muted/80'
+                )}
+              >
+                स्पैम ({moderationComments.filter(c => c.status === 'spam').length})
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {moderationComments
+              .filter(c => commentFilter === 'all' || c.status === commentFilter)
+              .map((comment) => (
+                <div
+                  key={comment.id}
+                  className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-background/50 p-4 md:flex-row md:items-center md:justify-between"
+                >
+                  <div className="flex items-start gap-3 min-w-0">
+                    <div className="grid size-10 shrink-0 place-items-center rounded-full bg-gradient-to-tr from-purple-500 to-indigo-500 font-bold text-white text-xs">
+                      {comment.author.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-extrabold text-sm text-foreground">{comment.author}</span>
+                        <span className="rounded-md bg-muted px-2 py-0.5 text-[10px] font-bold text-muted-foreground">
+                          {comment.contentTitle}
+                        </span>
+                        <span className="text-xs text-muted-foreground">{comment.createdAt}</span>
+                        {comment.status === 'reported' && (
+                          <span className="rounded-full bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[10px] font-bold text-amber-400">
+                            ⚠️ रिपोर्टेड (Reported)
+                          </span>
+                        )}
+                        {comment.status === 'spam' && (
+                          <span className="rounded-full bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 text-[10px] font-bold text-rose-400">
+                            🚫 स्पैम (Spam)
+                          </span>
+                        )}
+                        {comment.status === 'approved' && (
+                          <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                            ✅ स्वीकृत (Approved)
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-sm text-foreground/90">{comment.content}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0 self-end md:self-auto">
+                    {comment.status !== 'approved' && (
+                      <button
+                        type="button"
+                        onClick={() => handleApproveComment(comment.id)}
+                        className="rounded-xl bg-emerald-600/15 border border-emerald-600/30 px-3 py-1.5 text-xs font-bold text-emerald-400 hover:bg-emerald-600/25 transition-colors"
+                      >
+                        स्वीकृत करें
+                      </button>
+                    )}
+                    {comment.status !== 'spam' && (
+                      <button
+                        type="button"
+                        onClick={() => handleMarkSpam(comment.id)}
+                        className="rounded-xl bg-amber-500/15 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-400 hover:bg-amber-500/25 transition-colors"
+                      >
+                        स्पैम
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className="rounded-xl bg-rose-500/15 border border-rose-500/30 px-3 py-1.5 text-xs font-bold text-rose-400 hover:bg-rose-500/25 transition-colors"
+                    >
+                      हटाएँ
+                    </button>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* 7. TAB 6: ANALYTICS & TRAFFIC PANEL */}
+      {activeTab === 'analytics' && (
+        <div className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-card/60 p-6 md:p-8 shadow-xl backdrop-blur-md">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-lg font-black">ट्रैफ़िक और ऑडियंस इनसाइट्स (Audience & Content Analytics)</h2>
+            <p className="text-xs text-muted-foreground">
+              कॉर्नर कोना के पाठकों, श्रोताओं और दर्शकों का वास्तविक समय विश्लेषण।
+            </p>
+          </div>
+
+          {/* Metric Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="rounded-2xl border border-white/10 bg-background/50 p-5 shadow-sm">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="text-xs font-bold">मासिक विज़िटर्स (Monthly Users)</span>
+                <Users className="size-4 text-purple-400" />
+              </div>
+              <div className="mt-2 text-2xl font-black">148,200</div>
+              <div className="mt-1 flex items-center gap-1 text-xs font-bold text-emerald-400">
+                <TrendingUp className="size-3" />
+                <span>+24.8% पिछले माह से</span>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-background/50 p-5 shadow-sm">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="text-xs font-bold">पॉडकास्ट स्ट्रीम्स (Podcast Listens)</span>
+                <Headphones className="size-4 text-sky-400" />
+              </div>
+              <div className="mt-2 text-2xl font-black">89,450</div>
+              <div className="mt-1 flex items-center gap-1 text-xs font-bold text-emerald-400">
+                <TrendingUp className="size-3" />
+                <span>+31.2% वृद्धि</span>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-background/50 p-5 shadow-sm">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="text-xs font-bold">शॉर्ट्स व्यूज़ (Shorts Plays)</span>
+                <Film className="size-4 text-pink-400" />
+              </div>
+              <div className="mt-2 text-2xl font-black">312,600</div>
+              <div className="mt-1 flex items-center gap-1 text-xs font-bold text-emerald-400">
+                <TrendingUp className="size-3" />
+                <span>+42.5% वृद्धि</span>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-background/50 p-5 shadow-sm">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="text-xs font-bold">कम्युनिटी सहभागिता (Engagements)</span>
+                <MessageSquare className="size-4 text-amber-400" />
+              </div>
+              <div className="mt-2 text-2xl font-black">21,400</div>
+              <div className="mt-1 flex items-center gap-1 text-xs font-bold text-emerald-400">
+                <TrendingUp className="size-3" />
+                <span>+56.0% टिप्पणियाँ व लाइक्स</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Demographics & Format split */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+            <div className="rounded-2xl border border-white/10 bg-background/50 p-5">
+              <h3 className="text-sm font-extrabold mb-4">ऑडियंस डेमोग्राफिक्स (Audience Demographics)</h3>
+              <div className="space-y-3">
+                <div>
+                  <div className="flex justify-between text-xs font-bold mb-1">
+                    <span>Gen-Z (आयु 18 - 24 वर्ष)</span>
+                    <span className="text-purple-400 font-extrabold">58%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <div className="h-full bg-purple-500 rounded-full" style={{ width: '58%' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs font-bold mb-1">
+                    <span>Millennials (आयु 25 - 34 वर्ष)</span>
+                    <span className="text-sky-400 font-extrabold">34%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <div className="h-full bg-sky-500 rounded-full" style={{ width: '34%' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs font-bold mb-1">
+                    <span>अन्य आयु वर्ग (35+ वर्ष)</span>
+                    <span className="text-muted-foreground font-extrabold">8%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <div className="h-full bg-muted-foreground rounded-full" style={{ width: '8%' }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-background/50 p-5">
+              <h3 className="text-sm font-extrabold mb-4">कंटेंट फॉर्मेट वरीयता (Format Preference)</h3>
+              <div className="space-y-3">
+                <div>
+                  <div className="flex justify-between text-xs font-bold mb-1">
+                    <span>ऑडियो / पॉडकास्ट (Audiobooks & Podcasts)</span>
+                    <span className="text-amber-400 font-extrabold">42%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <div className="h-full bg-amber-500 rounded-full" style={{ width: '42%' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs font-bold mb-1">
+                    <span>शॉर्ट्स व वीडियो (Shorts & YouTube Video)</span>
+                    <span className="text-rose-400 font-extrabold">36%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <div className="h-full bg-rose-500 rounded-full" style={{ width: '36%' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs font-bold mb-1">
+                    <span>विचारशील लेख (Deep Stories & Reads)</span>
+                    <span className="text-emerald-400 font-extrabold">22%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: '22%' }} />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

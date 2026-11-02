@@ -12,6 +12,8 @@ import { FormatChips } from '@/components/home/format-chips'
 import { EpisodeCard } from '@/components/home/episode-card'
 import { MediaStage } from './media-stage'
 import { EpisodePlayAction } from './episode-play-action'
+import { CommentsSection } from '@/components/community/comments-section'
+import { PodcastJsonLd } from '@/components/seo/json-ld'
 
 export async function EpisodePage({ locale, episode, view }: { locale: Locale; episode: Episode; view?: string }) {
   const t = getDictionary(locale)
@@ -28,13 +30,17 @@ export async function EpisodePage({ locale, episode, view }: { locale: Locale; e
 
   return (
     <div className="flex flex-col gap-14 pb-16">
+      <PodcastJsonLd episode={episode} locale={locale} url={shareUrl} />
       <article className="mx-auto grid w-full max-w-7xl gap-8 px-4 pt-6 md:px-6 md:pt-10 lg:grid-cols-2 lg:items-center lg:gap-12">
         <MediaStage
           image={episode.image}
           label={isVideo ? t.home.watch : t.home.listen}
-          note={episode.premium ? t.pages.freePreview : isVideo ? t.pages.videoSoon : t.pages.audioSoon}
+          note={episode.premium ? t.pages.freePreview : isVideo ? 'YouTube Podcast Player' : t.pages.audioSoon}
           ratio={isVideo ? 'aspect-video' : 'aspect-square'}
           priority
+          episode={episode}
+          isVideo={isVideo}
+          youtubeId={episode.youtubeId}
         />
         <div className="flex flex-col gap-5">
           <Link href={backHref} className="inline-flex w-fit items-center gap-1.5 text-sm font-bold text-muted-foreground hover:text-foreground">
@@ -89,6 +95,29 @@ export async function EpisodePage({ locale, episode, view }: { locale: Locale; e
           )}
         </div>
       </article>
+
+      <div className="mx-auto w-full max-w-4xl px-4 md:px-6">
+        <CommentsSection
+          contentId={episode.id}
+          contentTitle={episode.title[locale]}
+          locale={locale}
+          labels={{
+            commentsTitle: t.pages.commentsTitle,
+            commentsSubtitle: t.pages.commentsSubtitle,
+            writeComment: t.pages.writeComment,
+            yourName: t.pages.yourName,
+            postComment: t.pages.postComment,
+            reply: t.pages.reply,
+            replies: t.pages.replies,
+            replyPlaceholder: t.pages.replyPlaceholder,
+            sendReply: t.pages.sendReply,
+            cancel: t.pages.cancel,
+            report: t.pages.report,
+            reported: t.pages.reported,
+            verifiedReader: t.pages.verifiedReader,
+          }}
+        />
+      </div>
 
       {related.length > 0 && (
         <section aria-labelledby="related-h" className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 md:px-6">
