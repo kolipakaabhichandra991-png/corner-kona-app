@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { CirclePlay } from 'lucide-react'
+import { BookOpen, CirclePlay } from 'lucide-react'
 import { Logo } from '@/components/brand/logo'
 import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
 import type { Category, Episode } from '@/lib/content/types'
@@ -58,6 +58,13 @@ export function SiteHeader({ locale, t, latest, categories }: Props) {
           >
             <CirclePlay className="size-4 transition-transform group-hover:rotate-12" aria-hidden="true" />
             {t.nav.videos}
+          </Link>
+          <Link
+            href="/en/stories"
+            className="inline-flex h-10 items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 text-sm font-bold text-sky-600 dark:text-sky-400 transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-sky-500 hover:text-white focus-visible:ring-2 focus-visible:ring-sky-500 cursor-pointer shadow-sm"
+          >
+            <BookOpen className="size-4" aria-hidden="true" />
+            <span>{locale === 'hi' ? 'अंग्रेज़ी लेख' : 'English Articles'}</span>
           </Link>
           <AntarYatraButton locale={locale} t={t} className="ml-1" />
         </nav>

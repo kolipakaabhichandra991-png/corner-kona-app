@@ -33,6 +33,11 @@ export interface Episode {
   id: string
   slug: string
   kind: 'podcast' | 'audiobook'
+  releaseType?: 'series' | 'standalone'
+  seriesTitle?: Localized
+  seasonNumber?: number
+  episodeNumber?: number
+  totalEpisodes?: number
   title: Localized
   show: Localized
   category: CategoryKey

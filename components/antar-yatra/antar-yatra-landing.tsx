@@ -33,6 +33,7 @@ import { FaqRotatingCards } from '@/components/antar-yatra/faq-rotating-cards'
 import { ScrollWordReveal } from '@/components/antar-yatra/scroll-word-reveal'
 import { AnimatedCounter } from '@/components/antar-yatra/animated-counter'
 import { ScrollReveal } from '@/components/ui/scroll-reveal'
+import { CheckoutModal } from '@/components/antar-yatra/checkout-modal'
 
 interface AntarYatraLandingProps {
   locale: Locale
@@ -44,6 +45,8 @@ export function AntarYatraLanding({ locale, t, episodes }: AntarYatraLandingProp
   const isHi = locale === 'hi'
   const { playTrack, togglePlay, currentTrack, isPlaying } = useAudio()
   const [activeRoutine, setActiveRoutine] = useState<number>(0)
+  const [checkoutOpen, setCheckoutOpen] = useState<boolean>(false)
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual' | 'lifetime'>('annual')
 
   // Four Core Spiritual Dimensions / Pillars
   const pillars = [
@@ -208,13 +211,17 @@ export function AntarYatraLanding({ locale, t, episodes }: AntarYatraLandingProp
               <span>{isHi ? 'मुफ़्त प्रीव्यू सुनें' : 'Listen to Free Preview'}</span>
             </a>
 
-            <a
-              href="#patron-circle"
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedPlan('annual')
+                setCheckoutOpen(true)
+              }}
               className="inline-flex h-13 items-center gap-2 rounded-full border border-amber-400/50 bg-white/10 px-7 text-sm font-bold text-white backdrop-blur transition-all duration-300 hover:bg-white/20 hover:border-amber-300 active:scale-95 cursor-pointer"
             >
               <Sparkles className="size-4 text-amber-300" />
-              <span>{isHi ? 'संरक्षक बनें (Patron Circle)' : 'Explore Patron Circle'}</span>
-            </a>
+              <span>{isHi ? 'संरक्षक बनें (Patron Circle)' : 'Join Patron Circle'}</span>
+            </button>
           </div>
 
           {/* Trust Highlights Ribbon with Animated PureCounters */}
@@ -698,6 +705,14 @@ export function AntarYatraLanding({ locale, t, episodes }: AntarYatraLandingProp
       <section className="mx-auto w-full">
         <FaqRotatingCards locale={locale} />
       </section>
+
+      {/* 9. Interactive Checkout Modal for Subscriptions */}
+      <CheckoutModal
+        locale={locale}
+        isOpen={checkoutOpen}
+        onClose={() => setCheckoutOpen(false)}
+        preselectedPlan={selectedPlan}
+      />
     </div>
   )
 }

@@ -93,6 +93,11 @@ const dict = {
       notFoundTitle: 'यह कोना ख़ाली है',
       notFoundBody: 'जो पेज आप ढूँढ रहे हैं वह मौजूद नहीं है या हटा दिया गया है।',
       liveEnded: 'यह लाइव ब्लॉग समाप्त हो चुका है।',
+      share: 'शेयर करें',
+      shareWhatsapp: 'व्हाट्सएप',
+      shareTwitter: 'एक्स (ट्विटर)',
+      copyLink: 'लिंक कॉपी करें',
+      linkCopied: 'कॉपी हो गया!',
     },
     footer: {
       about: 'Corner Kona एक मल्टीमीडिया इकोसिस्टम है — पॉडकास्ट, ऑडियोबुक, वीडियो और कहानियाँ।',
@@ -186,6 +191,11 @@ const dict = {
       notFoundTitle: 'This corner is empty',
       notFoundBody: 'The page you are looking for does not exist or has been moved.',
       liveEnded: 'This live blog has ended.',
+      share: 'Share',
+      shareWhatsapp: 'WhatsApp',
+      shareTwitter: 'X (Twitter)',
+      copyLink: 'Copy Link',
+      linkCopied: 'Copied!',
     },
     footer: {
       about: 'Corner Kona is a multimedia ecosystem — podcasts, audiobooks, video and storytelling.',

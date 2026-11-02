@@ -37,13 +37,19 @@ export const lookup = {
   short: (id: string) => loadStore().shorts.find((s) => s.id === id),
 }
 
-export async function getEpisodes(opts: { topic?: string; kind?: Episode['kind']; premium?: boolean } = {}) {
+export async function getEpisodes(opts: {
+  topic?: string
+  kind?: Episode['kind']
+  releaseType?: 'series' | 'standalone'
+  premium?: boolean
+} = {}) {
   const store = loadStore()
   const cat = opts.topic ? store.categories.find((c) => c.slug === opts.topic) : undefined
   return store.episodes.filter(
     (e) =>
       (opts.premium === undefined || e.premium === opts.premium) &&
       (!opts.kind || e.kind === opts.kind) &&
+      (!opts.releaseType || e.releaseType === opts.releaseType) &&
       (!opts.topic || e.category === cat?.key),
   )
 }

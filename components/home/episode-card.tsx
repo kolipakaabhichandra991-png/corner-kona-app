@@ -51,12 +51,24 @@ export function EpisodeCard({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <span className={cn('absolute top-0 left-0 h-1.5 w-full', s.bg)} aria-hidden="true" />
-          {episode.kind === 'audiobook' && (
-            <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-background/90 px-2 py-1 text-[11px] font-bold text-foreground backdrop-blur">
-              <BookOpen className="size-3" aria-hidden="true" />
-              {t.mega.audiobooks}
-            </span>
-          )}
+          <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
+            {episode.kind === 'audiobook' && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-bold text-foreground backdrop-blur">
+                <BookOpen className="size-3" aria-hidden="true" />
+                {t.mega.audiobooks}
+              </span>
+            )}
+            {episode.releaseType === 'series' && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-indigo-600/90 text-white px-2 py-0.5 text-[10px] font-black uppercase tracking-wider backdrop-blur shadow-sm">
+                <span>Series {episode.episodeNumber ? `· Ep ${episode.episodeNumber}` : ''}</span>
+              </span>
+            )}
+            {episode.releaseType === 'standalone' && episode.kind !== 'audiobook' && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-black/60 text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur">
+                <span>Single</span>
+              </span>
+            )}
+          </div>
 
           {/* Quick Play Button: Triggers Global Sticky Dock */}
           <button

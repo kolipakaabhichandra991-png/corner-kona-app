@@ -147,7 +147,7 @@ export function EpisodePlayAction({
                 key={ytId}
                 className="size-full"
                 src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`}
-                title={episode.title}
+                title={episode.title[locale]}
                 allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                 allowFullScreen
               />

@@ -302,7 +302,7 @@ export function FloatingSearchTab({ locale, t }: FloatingSearchTabProps) {
                               </span>
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-1.5">
-                                  <span className={cn('text-[9px] font-bold px-1.5 py-0.2 rounded-full uppercase', sectionStyle[ep.category].badge)}>
+                                  <span className={cn('text-[9px] font-bold px-1.5 py-0.2 rounded-full uppercase', sectionStyle[ep.category].bg, 'text-white')}>
                                     {ep.category}
                                   </span>
                                   {ep.premium && (

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Bell, Search, Sparkles } from 'lucide-react'
+import { Bell, BookOpen, ExternalLink, Search, Sparkles } from 'lucide-react'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { categories } from '@/lib/content/seed'
@@ -37,11 +37,22 @@ export function MoreMenu({ locale, t, children }: { locale: Locale; t: Dictionar
               </Link>
             ))}
             <Link
-              href={locale === 'en' ? '/' : '/en'}
+              href={locale === 'en' ? '/hi' : '/en'}
+              target={locale === 'en' ? '_blank' : undefined}
+              rel={locale === 'en' ? 'noopener noreferrer' : undefined}
               onClick={close}
-              className="flex items-center gap-2.5 rounded-xl border-2 border-english p-3 text-sm font-bold text-english"
+              className="flex items-center justify-between rounded-xl border-2 border-english p-3 text-sm font-bold text-english transition-all hover:bg-english hover:text-white"
             >
-              {t.nav.englishLabel}
+              <span>{locale === 'en' ? 'हिन्दी संस्करण (नया टैब)' : 'English Edition'}</span>
+              <ExternalLink className="size-3.5 opacity-70" aria-hidden="true" />
+            </Link>
+            <Link
+              href="/en/stories"
+              onClick={close}
+              className="flex items-center gap-2 rounded-xl border border-sky-500/40 bg-sky-500/10 p-3 text-sm font-bold text-sky-600 dark:text-sky-400 transition-all hover:bg-sky-500 hover:text-white"
+            >
+              <BookOpen className="size-4" aria-hidden="true" />
+              <span>{locale === 'hi' ? 'अंग्रेज़ी लेख' : 'English Articles'}</span>
             </Link>
           </div>
           <div className="flex items-center gap-2">

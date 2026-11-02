@@ -13,6 +13,7 @@ import { CategoryCard } from './category-card'
 import { AntarYatraPromo } from './antar-yatra-promo'
 import { Newsletter } from './newsletter'
 import { ShortsSection } from './shorts-section'
+import { CarouselGallery } from '@/components/gallery/carousel-gallery'
 
 export async function HomePage({ locale }: { locale: Locale }) {
   const t = getDictionary(locale)
@@ -28,6 +29,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
 
       <LiveBlock locale={locale} t={t} />
 
+      {/* The Corner Narrative & Ideas Space */}
       <GenZSpotlight locale={locale} />
 
       <section aria-labelledby="episodes-h" className="flex flex-col gap-5">
@@ -50,6 +52,9 @@ export async function HomePage({ locale }: { locale: Locale }) {
           ))}
         </Carousel>
       </section>
+
+      {/* Swipeable Photo & Story Carousel Gallery (Client Deliverable) */}
+      <CarouselGallery locale={locale} />
 
       <AntarYatraPromo locale={locale} t={t} episodes={home.antarYatra} />
 

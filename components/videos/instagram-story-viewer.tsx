@@ -366,7 +366,7 @@ export function InstagramStoryViewer({
                   : 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white',
               )}
               style={{
-                ringColor: isSelected ? pillColor : undefined,
+                borderColor: isSelected ? pillColor : undefined,
               }}
             >
               <span

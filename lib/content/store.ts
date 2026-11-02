@@ -41,7 +41,7 @@ export function loadStore(): ContentStoreData {
         ...parsed,
         categories: parsed.categories && parsed.categories.length > 0 ? parsed.categories : categories,
       }
-      return memoryStore
+      return memoryStore!
     }
   } catch (err) {
     console.error('Error reading content-store.json, using seed fallback:', err)

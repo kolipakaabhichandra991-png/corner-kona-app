@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
+import { CheckoutModal } from '@/components/antar-yatra/checkout-modal'
 import { cn } from '@/lib/utils'
 
 interface AntarYatraSubscriptionCardProps {
@@ -36,10 +37,15 @@ export function AntarYatraSubscriptionCard({
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
+    if (tab === 'create' && tier === 'patron') {
+      setCheckoutOpen(true)
+      return
+    }
     setSubmitted(true)
     if (onComplete) onComplete()
   }
@@ -518,6 +524,18 @@ export function AntarYatraSubscriptionCard({
           </div>
         </div>
       </div>
-    </section>
+        <CheckoutModal
+          locale={locale}
+          isOpen={checkoutOpen}
+          onClose={() => {
+            setCheckoutOpen(false)
+            setSubmitted(true)
+          }}
+          onSuccess={() => {
+            setSubmitted(true)
+            if (onComplete) onComplete()
+          }}
+        />
+      </section>
   )
 }
