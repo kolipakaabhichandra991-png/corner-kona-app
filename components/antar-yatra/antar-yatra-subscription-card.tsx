@@ -42,10 +42,6 @@ export function AntarYatraSubscriptionCard({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
-    if (tab === 'create' && tier === 'patron') {
-      setCheckoutOpen(true)
-      return
-    }
     setSubmitted(true)
     if (onComplete) onComplete()
   }
@@ -114,59 +110,8 @@ export function AntarYatraSubscriptionCard({
           </div>
         ) : (
           <>
-            {/* Tiers quick toggle */}
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setTier('patron')}
-                className={cn(
-                  'relative flex flex-col rounded-xl border p-2.5 text-left transition-all cursor-pointer',
-                  tier === 'patron'
-                    ? 'border-amber-500 bg-amber-500/10 ring-1 ring-amber-500'
-                    : 'border-border/70 hover:border-amber-500/40 bg-card/60'
-                )}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">
-                    {isHi ? 'संरक्षक (Patron)' : 'Patron'}
-                  </span>
-                  <span className="text-[9px] font-extrabold uppercase text-amber-500">
-                    Popular
-                  </span>
-                </div>
-                <div className="mt-1 flex items-baseline gap-1">
-                  <span className="text-sm font-black text-foreground">₹199</span>
-                  <span className="text-[10px] text-muted-foreground">/mo</span>
-                </div>
-                <span className="mt-0.5 text-[10px] text-muted-foreground leading-tight">
-                  {isHi ? 'ऑल-एक्सेस + विज्ञापन-मुक्त' : 'All-access + ad-free'}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setTier('free')}
-                className={cn(
-                  'flex flex-col rounded-xl border p-2.5 text-left transition-all cursor-pointer',
-                  tier === 'free'
-                    ? 'border-primary bg-primary/10 ring-1 ring-primary'
-                    : 'border-border/70 hover:border-primary/40 bg-card/60'
-                )}
-              >
-                <span className="text-[11px] font-bold text-muted-foreground">
-                  {isHi ? 'मुफ़्त (Free)' : 'Free'}
-                </span>
-                <div className="mt-1 flex items-baseline gap-1">
-                  <span className="text-sm font-black text-foreground">₹0</span>
-                </div>
-                <span className="mt-0.5 text-[10px] text-muted-foreground leading-tight">
-                  {isHi ? 'साप्ताहिक डाइजेस्ट' : 'Weekly highlights'}
-                </span>
-              </button>
-            </div>
-
             {/* Quick Email Form */}
-            <form onSubmit={handleSubmit} className="flex flex-col gap-2 pt-1">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 pt-1">
               <div className="relative">
                 <Mail className="absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-muted-foreground" />
                 <input
@@ -332,56 +277,6 @@ export function AntarYatraSubscriptionCard({
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-                {/* Plan Selection Cards (in Create Account Mode) */}
-                {tab === 'create' && (
-                  <div className="grid grid-cols-2 gap-3 pb-2">
-                    <button
-                      type="button"
-                      onClick={() => setTier('free')}
-                      className={cn(
-                        'flex flex-col rounded-2xl border p-4 text-left transition-all cursor-pointer',
-                        tier === 'free'
-                          ? 'border-primary ring-2 ring-primary/40 bg-primary/10'
-                          : 'border-border/60 hover:border-border'
-                      )}
-                    >
-                      <span className="text-xs font-bold text-muted-foreground">
-                        {isHi ? 'मुफ़्त' : 'Free'}
-                      </span>
-                      <div className="mt-1 flex items-baseline gap-1">
-                        <span className="text-2xl font-black text-foreground">₹0</span>
-                      </div>
-                      <span className="mt-1 text-[11px] text-muted-foreground">
-                        {isHi ? 'साप्ताहिक डाइजेस्ट' : 'Weekly Digest'}
-                      </span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setTier('patron')}
-                      className={cn(
-                        'relative flex flex-col rounded-2xl border p-4 text-left transition-all cursor-pointer overflow-hidden',
-                        tier === 'patron'
-                          ? 'border-purple-500 ring-2 ring-purple-500/50 bg-purple-500/10'
-                          : 'border-border/60 hover:border-purple-500/50'
-                      )}
-                    >
-                      <span className="absolute top-3 right-3 rounded-full bg-gradient-to-r from-purple-500 to-sky-400 px-2 py-0.5 text-[9px] font-black uppercase text-white shadow-sm">
-                        POPULAR
-                      </span>
-                      <span className="text-xs font-bold text-purple-600 dark:text-purple-400">
-                        {isHi ? 'संरक्षक' : 'Patron'}
-                      </span>
-                      <div className="mt-1 flex items-baseline gap-1">
-                        <span className="text-2xl font-black text-foreground">₹199</span>
-                        <span className="text-xs text-muted-foreground">/mo</span>
-                      </div>
-                      <span className="mt-1 text-[11px] text-muted-foreground">
-                        {isHi ? 'सभी प्रीमियम एपिसोड्स' : 'All Premium'}
-                      </span>
-                    </button>
-                  </div>
-                )}
 
                 {/* Name Input (in Create Account Mode) */}
                 {tab === 'create' && (
@@ -464,23 +359,12 @@ export function AntarYatraSubscriptionCard({
                 <Button
                   type="submit"
                   size="lg"
-                  className={cn(
-                    'mt-2 h-12 w-full rounded-xl font-bold text-white shadow-lg transition-all cursor-pointer',
-                    tab === 'create'
-                      ? tier === 'patron'
-                        ? 'bg-gradient-to-r from-purple-500 via-indigo-500 to-sky-400 hover:opacity-95 shadow-purple-500/25 active:scale-98'
-                        : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-95 shadow-amber-500/25 active:scale-98'
-                      : 'bg-gradient-to-r from-amber-500 to-orange-600 hover:opacity-95 shadow-amber-500/25 active:scale-98'
-                  )}
+                  className="mt-2 h-12 w-full rounded-xl font-bold text-white shadow-lg bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:opacity-95 shadow-amber-500/25 active:scale-98 transition-all cursor-pointer"
                 >
                   {tab === 'create'
                     ? isHi
-                      ? tier === 'patron'
-                        ? 'खाता बनाएँ व संरक्षक बनें (₹199)'
-                        : 'मुफ़्त खाता बनाएँ'
-                      : tier === 'patron'
-                      ? 'Join Antar Yatra Patron (₹199)'
-                      : 'Create Free Account'
+                      ? 'खाता बनाएँ'
+                      : 'Create Account'
                     : isHi
                     ? 'अकाउंट में लॉगिन करें'
                     : 'Sign In to Account'}
@@ -492,6 +376,28 @@ export function AntarYatraSubscriptionCard({
                     ? 'जारी रखकर, आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत होते हैं।'
                     : 'By continuing you agree to our Terms of Service & Privacy Policy.'}
                 </p>
+
+                {/* Patron Circle Callout Banner */}
+                <div className="mt-2 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-3.5 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Sparkles className="size-4 text-amber-500 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-foreground truncate">
+                        {isHi ? 'अंतर यात्रा संरक्षक क्लब' : 'Antar Yatra Patron Circle'}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground truncate">
+                        {isHi ? 'विज्ञापन-मुक्त और सभी आध्यात्मिक अंक' : 'Unlock ad-free spiritual journeys'}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setCheckoutOpen(true)}
+                    className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:brightness-110 shrink-0 cursor-pointer"
+                  >
+                    {isHi ? 'प्लान देखें' : 'View Plans'}
+                  </button>
+                </div>
 
                 {/* Switch Tab helper link */}
                 <div className="text-center pt-1 text-xs">
