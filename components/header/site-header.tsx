@@ -1,0 +1,81 @@
+'use client'
+
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { BookOpen, CirclePlay } from 'lucide-react'
+import { Logo } from '@/components/brand/logo'
+import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
+import type { Category, Episode } from '@/lib/content/types'
+import { cn } from '@/lib/utils'
+import { PodcastMegaMenu } from './podcast-mega-menu'
+import { AntarYatraButton } from './antar-yatra-button'
+import { LanguagePill } from './language-pill'
+import { LivePill } from './live-pill'
+import { HeaderActions } from './header-actions'
+import { CategoryNav } from './category-nav'
+
+interface Props {
+  locale: Locale
+  t: Dictionary
+  latest: Episode[]
+  categories: Category[]
+}
+
+export function SiteHeader({ locale, t, latest, categories }: Props) {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <header
+      className={cn(
+        'sticky top-0 z-50 border-b backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-300',
+        scrolled
+          ? 'border-border bg-background/90 shadow-md'
+          : 'border-border/40 bg-background/75',
+      )}
+    >
+      <div
+        className={cn(
+          'mx-auto flex max-w-7xl items-center gap-3 px-4 transition-[height] duration-300 md:px-6',
+          scrolled ? 'h-14' : 'h-16 md:h-20',
+        )}
+      >
+        <Link href={localePath(locale)} aria-label="Home" className="shrink-0 rounded-md focus-visible:ring-2 focus-visible:ring-ring">
+          <Logo compact={scrolled} />
+        </Link>
+
+        <nav aria-label="Primary" className="ml-2 hidden items-center gap-1 lg:flex">
+          <PodcastMegaMenu locale={locale} t={t} latest={latest} categories={categories} />
+          <Link
+            href={localePath(locale, '/videos')}
+            className="inline-flex h-10 items-center gap-2 rounded-full px-3 text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
+          >
+            <CirclePlay className="size-4 transition-transform group-hover:rotate-12" aria-hidden="true" />
+            {t.nav.videos}
+          </Link>
+          <Link
+            href="/en/stories"
+            className="inline-flex h-10 items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 text-sm font-bold text-sky-600 dark:text-sky-400 transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-sky-500 hover:text-white focus-visible:ring-2 focus-visible:ring-sky-500 cursor-pointer shadow-sm"
+          >
+            <BookOpen className="size-4" aria-hidden="true" />
+            <span>{locale === 'hi' ? 'अंग्रेज़ी लेख' : 'English Articles'}</span>
+          </Link>
+          <AntarYatraButton locale={locale} t={t} className="ml-1" />
+        </nav>
+
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+          <LivePill locale={locale} t={t} />
+          <LanguagePill locale={locale} t={t} />
+          <HeaderActions locale={locale} t={t} />
+        </div>
+      </div>
+      <CategoryNav locale={locale} categories={categories} />
+    </header>
+  )
+}
