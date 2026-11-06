@@ -31,23 +31,127 @@ export function LoginPage({ locale }: { locale: Locale }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [agreeTerms, setAgreeTerms] = useState(true)
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  function getErrorMessage(errorMsg: string, hindi: boolean): string {
+    if (!hindi) return errorMsg
+    const lower = errorMsg.toLowerCase()
+    if (lower.includes('invalid email or password') || lower.includes('invalid login')) {
+      return 'अमान्य ईमेल या पासवर्ड'
+    }
+    if (lower.includes('already exists')) {
+      return 'इस ईमेल के साथ पहले से एक खाता मौजूद है'
+    }
+    if (lower.includes('not match') || lower.includes('mismatch')) {
+      return 'पासवर्ड मेल नहीं खाते'
+    }
+    if (lower.includes('at least 8')) {
+      return 'पासवर्ड कम से कम 8 अक्षरों का होना चाहिए'
+    }
+    if (lower.includes('letter and one number')) {
+      return 'पासवर्ड में कम से कम एक अक्षर और एक संख्या होनी चाहिए'
+    }
+    if (lower.includes('invalid email')) {
+      return 'अमान्य ईमेल पता'
+    }
+    if (lower.includes('name is required') || lower.includes('name')) {
+      return 'नाम आवश्यक है'
+    }
+    return 'कुछ गलत हो गया। कृपया पुन: प्रयास करें।'
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
-    setSubmitted(true)
-    try {
-      const fullName = firstName ? `${firstName} ${lastName}`.trim() : email.split('@')[0]
-      localStorage.setItem('ck_auth_user', JSON.stringify({
-        isSubscribed: true,
-        name: fullName,
-        email,
-        phone: phone || '+91 98765 43210',
-        plan: isHi ? 'वार्षिक संरक्षक पास' : 'Annual Patron Pass',
-        validUntil: isHi ? 'नवंबर 2027' : 'Nov 2027',
-      }))
-    } catch {
-      // ignore
+    setError(null)
+
+    if (tab === 'create') {
+      if (password !== confirmPassword) {
+        setError(isHi ? 'पासवर्ड मेल नहीं खाते' : 'Passwords do not match')
+        return
+      }
+
+      setLoading(true)
+      try {
+        const fullName = `${firstName} ${lastName}`.trim()
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: fullName,
+            email,
+            phone: phone || undefined,
+            password,
+            confirmPassword,
+          }),
+        })
+
+        const data = await res.json()
+
+        if (!res.ok) {
+          setError(getErrorMessage(data.error || 'Registration failed', isHi))
+          setLoading(false)
+          return
+        }
+
+        try {
+          localStorage.setItem('ck_auth_user', JSON.stringify({
+            isSubscribed: true,
+            name: data.user?.name || fullName,
+            email: data.user?.email || email,
+            phone: phone || '+91 98765 43210',
+            plan: isHi ? 'वार्षिक संरक्षक पास' : 'Annual Patron Pass',
+            validUntil: isHi ? 'नवंबर 2027' : 'Nov 2027',
+          }))
+        } catch {
+          // ignore
+        }
+
+        setSubmitted(true)
+      } catch {
+        setError(isHi ? 'सर्वर से संपर्क नहीं हो सका। कृपया पुन: प्रयास करें।' : 'Could not connect to server. Please try again.')
+      } finally {
+        setLoading(false)
+      }
+    } else {
+      setLoading(true)
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        })
+
+        const data = await res.json()
+
+        if (!res.ok) {
+          setError(getErrorMessage(data.error || 'Invalid email or password', isHi))
+          setLoading(false)
+          return
+        }
+
+        try {
+          localStorage.setItem('ck_auth_user', JSON.stringify({
+            isSubscribed: true,
+            name: data.user?.name || email.split('@')[0],
+            email: data.user?.email || email,
+            phone: phone || '+91 98765 43210',
+            plan: isHi ? 'वार्षिक संरक्षक पास' : 'Annual Patron Pass',
+            validUntil: isHi ? 'नवंबर 2027' : 'Nov 2027',
+          }))
+        } catch {
+          // ignore
+        }
+
+        setSubmitted(true)
+      } catch {
+        setError(isHi ? 'सर्वर से संपर्क नहीं हो सका। कृपया पुन: प्रयास करें।' : 'Could not connect to server. Please try again.')
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -131,6 +235,7 @@ export function LoginPage({ locale }: { locale: Locale }) {
               onClick={() => {
                 setTab('create')
                 setSubmitted(false)
+                setError(null)
               }}
               className={cn(
                 'rounded-xl py-2.5 transition-all duration-200 cursor-pointer',
@@ -146,6 +251,7 @@ export function LoginPage({ locale }: { locale: Locale }) {
               onClick={() => {
                 setTab('login')
                 setSubmitted(false)
+                setError(null)
               }}
               className={cn(
                 'rounded-xl py-2.5 transition-all duration-200 cursor-pointer',
@@ -397,11 +503,19 @@ export function LoginPage({ locale }: { locale: Locale }) {
                 </label>
               )}
 
+              {/* Error Message */}
+              {error && (
+                <p className="text-xs font-semibold text-rose-500 text-center">
+                  {error}
+                </p>
+              )}
+
               {/* 6. SUBMIT BUTTON */}
               <Button
                 type="submit"
                 size="lg"
-                className="mt-1 h-12 w-full rounded-xl font-bold text-white shadow-lg bg-gradient-to-r from-[#9333EA] to-[#0EA5E9] hover:opacity-95 shadow-purple-500/25 active:scale-98 transition-all cursor-pointer"
+                disabled={loading}
+                className="mt-1 h-12 w-full rounded-xl font-bold text-white shadow-lg bg-gradient-to-r from-[#9333EA] to-[#0EA5E9] hover:opacity-95 shadow-purple-500/25 active:scale-98 transition-all cursor-pointer disabled:opacity-50"
               >
                 {tab === 'create'
                   ? isHi
@@ -452,7 +566,10 @@ export function LoginPage({ locale }: { locale: Locale }) {
                     {isHi ? 'पहले से खाता है?' : 'Already have an account?'}{' '}
                     <button
                       type="button"
-                      onClick={() => setTab('login')}
+                      onClick={() => {
+                        setTab('login')
+                        setError(null)
+                      }}
                       className="font-bold text-primary hover:underline cursor-pointer"
                     >
                       {isHi ? 'लॉगिन करें' : 'Sign In'}
@@ -463,7 +580,10 @@ export function LoginPage({ locale }: { locale: Locale }) {
                     {isHi ? 'नया खाता चाहिए?' : "Don't have an account?"}{' '}
                     <button
                       type="button"
-                      onClick={() => setTab('create')}
+                      onClick={() => {
+                        setTab('create')
+                        setError(null)
+                      }}
                       className="font-bold text-primary hover:underline cursor-pointer"
                     >
                       {isHi ? 'खाता बनाएँ' : 'Create Account'}
