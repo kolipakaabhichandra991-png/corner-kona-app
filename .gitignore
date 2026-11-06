@@ -12,6 +12,7 @@ __v0_jsx-dev-runtime.ts
 
 # Common ignores
 node_modules/
+prisma/generated/
 .next/
 *.log
 .DS_Store
