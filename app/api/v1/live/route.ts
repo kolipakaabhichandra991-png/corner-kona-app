@@ -5,5 +5,5 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   const blog = await getActiveLiveBlog()
-  return NextResponse.json({ data: blog ? resolveLiveBlog(blog) : null })
+  return NextResponse.json({ data: blog ? await resolveLiveBlog(blog) : null })
 }

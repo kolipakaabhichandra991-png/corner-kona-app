@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  slug      String   @unique
+  name      Json
+  blurb     Json
+  image     String
+  children  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Episode {
+  id                String              @id
+  slug              String              @unique
+  kind              String
+  releaseType       String?
+  seriesTitle       Json?
+  seasonNumber      Int?
+  episodeNumber     Int?
+  totalEpisodes     Int?
+  youtubeId         String?
+  audioUrl          String?
+  videoUrl          String?
+  thumbnailUrl      String?
+  title             Json
+  show              Json
+  category          String
+  durationMin       Int
+  image             String
+  premium           Boolean             @default(false)
+  language          String              @default("hi")
+  publishedAt       DateTime
+  formats           Json?
+  chapters          Chapter[]
+  transcripts       TranscriptLine[]
+  listeningProgress ListeningProgress[]
+  heroConfigs       HeroConfig[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+model Story {
+  id          String   @id
+  slug        String   @unique
+  title       Json
+  dek         Json
+  category    String
+  image       String
+  readMin     Int
+  publishedAt DateTime
+  formats     Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Short {
+  id          String   @id
+  slug        String   @unique
+  title       Json
+  category    String
+  durationSec Int
+  image       String
+  views       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model LiveBlog {
+  id        String      @id
+  slug      String      @unique
+  active    Boolean     @default(true)
+  title     Json
+  category  String
+  entries   LiveEntry[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model LiveEntry {
+  id         String   @id
+  liveBlogId String
+  liveBlog   LiveBlog @relation(fields: [liveBlogId], references: [id], onDelete: Cascade)
+  type       String
+  at         DateTime
+  body       Json?
+  storyId    String?
+  shortId    String?
+  createdAt  DateTime @default(now())
+
+  @@index([liveBlogId])
+}
+
+model HeroConfig {
+  id        String   @id @default("default")
+  episodeId String
+  episode   Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  kicker    Json
+  summary   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Chapter {
+  id        String   @id
+  episodeId String
+  episode   Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  title     Json
+  start     Int
+  createdAt DateTime @default(now())
+
+  @@index([episodeId])
+}
+
+model TranscriptLine {
+  id        String   @id @default(cuid())
+  episodeId String
+  episode   Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  start     Float
+  end       Float
+  speaker   String?
+  hi        String   @db.Text
+  en        String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([episodeId])
+}
+
+model Comment {
+  id         String    @id @default(cuid())
+  contentId  String
+  parentId   String?
+  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    Comment[] @relation("CommentReplies")
+  authorName String
+  userId     String?
+  body       String    @db.Text
+  likes      Int       @default(0)
+  reported   Boolean   @default(false)
+  status     String    @default("approved")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([contentId])
+  @@index([parentId])
+}
+
+model ListeningProgress {
+  id          String   @id @default(cuid())
+  visitorId   String
+  episodeId   String
+  episode     Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  positionSec Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([visitorId, episodeId])
+  @@index([visitorId])
+  @@index([episodeId])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}

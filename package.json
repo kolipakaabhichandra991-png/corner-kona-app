@@ -11,6 +11,9 @@
   "dependencies": {
     "@base-ui/react": "^1.5.0",
     "@hugeicons/core-free-icons": "^4.3.5",
+    "@neon/config": "^1.11.3",
+    "@neon/env": "^1.6.15",
+    "@prisma/client": "^6.19.3",
     "@vercel/analytics": "1.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -32,7 +35,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8.5",
+    "prisma": "^6.19.3",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "5.7.3"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

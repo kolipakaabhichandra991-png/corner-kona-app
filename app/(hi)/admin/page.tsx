@@ -25,7 +25,7 @@ export default async function AdminDashboardRoute() {
     redirect('/admin/login')
   }
 
-  const store = loadStore()
+  const store = await loadStore()
 
   return (
     <AdminDashboard
