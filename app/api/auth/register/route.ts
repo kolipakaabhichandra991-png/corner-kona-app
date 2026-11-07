@@ -3,6 +3,11 @@ import { prisma } from '@/lib/db'
 import { hashPassword } from '@/lib/auth/password'
 import { createSessionToken, setSessionCookie } from '@/lib/auth/session'
 import { registerSchema } from '@/lib/auth/validation'
+import {
+  getClientIp,
+  checkRegisterRateLimit,
+  recordRegisterAttempt,
+} from '@/lib/auth/rate-limit'
 
 export async function POST(request: Request) {
   try {
@@ -16,8 +21,25 @@ export async function POST(request: Request) {
       )
     }
 
+    const ip = getClientIp(request)
+
+    // Rate limit: 5 registration attempts per IP per hour
+    const rateLimit = await checkRegisterRateLimit(ip)
+    if (rateLimit.blocked) {
+      return NextResponse.json(
+        { error: rateLimit.message || 'Too many registration attempts. Please try again in an hour.' },
+        { status: 429 }
+      )
+    }
+
     const validationResult = registerSchema.safeParse(body)
     if (!validationResult.success) {
+      // Record attempt to count toward the 5/hour limit
+      const rawEmail = typeof body === 'object' && body && 'email' in body && typeof (body as any).email === 'string'
+        ? (body as any).email
+        : ''
+      await recordRegisterAttempt(rawEmail, ip)
+
       const firstIssue = validationResult.error.issues[0]
       const errorMessage = firstIssue ? firstIssue.message : 'Invalid registration data'
       return NextResponse.json(
@@ -27,6 +49,9 @@ export async function POST(request: Request) {
     }
 
     const { name, email, password, phone } = validationResult.data
+
+    // Record the attempt for this IP
+    await recordRegisterAttempt(email, ip)
 
     // Check if user with this email already exists
     const existingUser = await prisma.user.findUnique({
@@ -80,4 +105,3 @@ export async function POST(request: Request) {
     )
   }
 }
-

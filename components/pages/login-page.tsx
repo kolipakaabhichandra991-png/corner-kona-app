@@ -37,6 +37,12 @@ export function LoginPage({ locale }: { locale: Locale }) {
   function getErrorMessage(errorMsg: string, hindi: boolean): string {
     if (!hindi) return errorMsg
     const lower = errorMsg.toLowerCase()
+    if (lower.includes('too many attempts') || lower.includes('15 minutes')) {
+      return 'बहुत अधिक प्रयास। कृपया 15 मिनट बाद पुन: प्रयास करें।'
+    }
+    if (lower.includes('too many registration') || lower.includes('hour')) {
+      return 'बहुत अधिक पंजीकरण प्रयास। कृपया एक घंटे बाद पुन: प्रयास करें।'
+    }
     if (lower.includes('invalid email or password') || lower.includes('invalid login')) {
       return 'अमान्य ईमेल या पासवर्ड'
     }
