@@ -151,6 +151,10 @@ model Comment {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
+  commentLikes      CommentLike[]
+  commentReports    CommentReport[]
+  moderationActions ModerationAction[]
+
   @@index([contentId])
   @@index([parentId])
 }
@@ -222,4 +226,39 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model CommentLike {
+  id        String   @id @default(cuid())
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+
+  @@unique([commentId, userId])
+  @@index([userId])
+}
+
+model CommentReport {
+  id        String   @id @default(cuid())
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@unique([commentId, userId])
+  @@index([commentId])
+}
+
+model ModerationAction {
+  id        String   @id @default(cuid())
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  action    String
+  adminName String
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([commentId])
 }
