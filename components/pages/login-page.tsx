@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Check, Sparkles, Lock, Mail, KeyRound, ShieldCheck, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/brand/logo'
 import { localePath, type Locale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
 
 export function LoginPage({ locale }: { locale: Locale }) {
   const isHi = locale === 'hi'
@@ -16,11 +17,50 @@ export function LoginPage({ locale }: { locale: Locale }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
+  const [authError, setAuthError] = useState<string | null>(null)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
     setSubmitted(true)
+  }
+
+  useEffect(() => {
+    const url = new URL(window.location.href)
+    if (url.searchParams.get('authError') === 'google_signin_failed') {
+      setAuthError(
+        isHi
+          ? 'Google से लॉगिन नहीं हो सका। कृपया फिर कोशिश करें।'
+          : 'Google sign-in could not be completed. Please try again.',
+      )
+      url.searchParams.delete('authError')
+      window.history.replaceState(null, '', url)
+    }
+  }, [isHi])
+
+  const handleGoogleSignIn = async () => {
+    setAuthError(null)
+    setGoogleLoading(true)
+
+    try {
+      const callbackUrl = new URL('/auth/callback', window.location.origin)
+      callbackUrl.searchParams.set('next', localePath(locale))
+
+      const { error } = await createClient().auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: callbackUrl.toString() },
+      })
+
+      if (error) throw error
+    } catch {
+      setAuthError(
+        isHi
+          ? 'Google से लॉगिन शुरू नहीं हो सका। कृपया सेटिंग जाँचकर फिर कोशिश करें।'
+          : 'Could not start Google sign-in. Please check the configuration and try again.',
+      )
+      setGoogleLoading(false)
+    }
   }
 
   return (
@@ -118,6 +158,30 @@ export function LoginPage({ locale }: { locale: Locale }) {
             >
               {isHi ? 'लॉगिन करें' : 'Sign In'}
             </button>
+          </div>
+
+          <div className="mt-6">
+            <Button
+              type="button"
+              variant="outline"
+              size="lg"
+              disabled={googleLoading}
+              onClick={handleGoogleSignIn}
+              className="h-12 w-full rounded-xl font-bold"
+            >
+              {googleLoading
+                ? isHi
+                  ? 'Google पर भेजा जा रहा है…'
+                  : 'Redirecting to Google…'
+                : isHi
+                  ? 'Google से जारी रखें'
+                  : 'Continue with Google'}
+            </Button>
+            {authError && (
+              <p role="alert" className="mt-3 text-center text-sm text-destructive">
+                {authError}
+              </p>
+            )}
           </div>
 
           {submitted ? (
