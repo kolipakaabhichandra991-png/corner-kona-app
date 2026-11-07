@@ -140,3 +140,49 @@ export async function recordRegisterAttempt(email: string, ip: string): Promise<
     console.error('Error recording register attempt:', err)
   }
 }
+
+const NEWSLETTER_MAX_ATTEMPTS = 5
+const NEWSLETTER_WINDOW_MS = 60 * 60 * 1000 // 1 hour
+
+/**
+ * Checks if newsletter signup is blocked for the given IP (max 5 per hour).
+ */
+export async function checkNewsletterRateLimit(
+  ip: string
+): Promise<{ blocked: boolean; message?: string }> {
+  const windowStart = new Date(Date.now() - NEWSLETTER_WINDOW_MS)
+
+  const attempts = await prisma.loginAttempt.count({
+    where: {
+      ip,
+      type: 'newsletter',
+      createdAt: { gte: windowStart },
+    },
+  })
+
+  if (attempts >= NEWSLETTER_MAX_ATTEMPTS) {
+    return {
+      blocked: true,
+      message: 'Too many signup attempts. Please try again in an hour.',
+    }
+  }
+
+  return { blocked: false }
+}
+
+/**
+ * Records a newsletter signup attempt for an IP.
+ */
+export async function recordNewsletterAttempt(ip: string): Promise<void> {
+  try {
+    await prisma.loginAttempt.create({
+      data: {
+        ip,
+        type: 'newsletter',
+      },
+    })
+  } catch (err) {
+    console.error('Error recording newsletter attempt:', err)
+  }
+}
+
