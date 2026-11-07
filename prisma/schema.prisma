@@ -179,7 +179,55 @@ model NewsletterSubscriber {
   createdAt DateTime @default(now())
 }
 
-// A logged-in user's like on a comment (one per user per comment).
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model CommentLike {
   id        String   @id @default(cuid())
   commentId String
@@ -191,7 +239,6 @@ model CommentLike {
   @@index([userId])
 }
 
-// A logged-in user's report on a comment (one per user per comment).
 model CommentReport {
   id        String   @id @default(cuid())
   commentId String
@@ -204,7 +251,6 @@ model CommentReport {
   @@index([commentId])
 }
 
-// Admin-side log: what an admin did to a comment (kept separate from what users wrote).
 model ModerationAction {
   id        String   @id @default(cuid())
   commentId String
