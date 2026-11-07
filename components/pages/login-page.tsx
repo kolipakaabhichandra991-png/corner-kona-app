@@ -280,8 +280,8 @@ export function LoginPage({ locale }: { locale: Locale }) {
               </h3>
               <p className="max-w-sm text-sm text-muted-foreground">
                 {isHi
-                  ? `पुष्टि लिंक आपके ईमेल (${email}) पर भेज दिया गया है।`
-                  : `A confirmation link has been sent to ${email}.`}
+                  ? 'आपका खाता तैयार है। अब आप सुनना शुरू कर सकते हैं।'
+                  : 'Your account is ready. You can start listening now.'}
               </p>
               <Link href={localePath(locale)}>
                 <Button className="mt-2 rounded-full font-bold">
