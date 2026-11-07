@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import {
   ArrowLeft,
   Sparkles,
@@ -12,11 +13,15 @@ import {
   Phone,
   Eye,
   EyeOff,
+  Loader2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/brand/logo'
 import { localePath, type Locale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+
+// TODO: confirm the real Google sign-in URL with the backend dev
+const GOOGLE_AUTH_URL = '/api/auth/google'
 
 export function LoginPage({ locale }: { locale: Locale }) {
   const isHi = locale === 'hi'
@@ -32,9 +37,37 @@ export function LoginPage({ locale }: { locale: Locale }) {
   const [agreeTerms, setAgreeTerms] = useState(true)
   const [submitted, setSubmitted] = useState(false)
 
+  const params = useSearchParams()
+  const urlError = params.get('error')
+  const [googleLoading, setGoogleLoading] = useState(false)
+  const [formError, setFormError] = useState('')
+
+  const errorMessage =
+    formError ||
+    (urlError === 'access_denied'
+      ? isHi
+        ? 'साइन-इन रद्द कर दिया गया'
+        : 'Sign-in was cancelled'
+      : urlError
+        ? isHi
+          ? 'कुछ गलत हो गया, फिर कोशिश करें'
+          : 'Something went wrong, please try again'
+        : '')
+
+  const handleGoogle = () => {
+    setFormError('')
+    setGoogleLoading(true)
+    window.location.href = GOOGLE_AUTH_URL
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
+    if (tab === 'create' && password !== confirmPassword) {
+      setFormError(isHi ? 'पासवर्ड मेल नहीं खाते' : 'Passwords do not match')
+      return
+    }
+    setFormError('')
     setSubmitted(true)
     try {
       const fullName = firstName ? `${firstName} ${lastName}`.trim() : email.split('@')[0]
@@ -131,6 +164,7 @@ export function LoginPage({ locale }: { locale: Locale }) {
               onClick={() => {
                 setTab('create')
                 setSubmitted(false)
+                setFormError('')
               }}
               className={cn(
                 'rounded-xl py-2.5 transition-all duration-200 cursor-pointer',
@@ -146,6 +180,7 @@ export function LoginPage({ locale }: { locale: Locale }) {
               onClick={() => {
                 setTab('login')
                 setSubmitted(false)
+                setFormError('')
               }}
               className={cn(
                 'rounded-xl py-2.5 transition-all duration-200 cursor-pointer',
@@ -169,8 +204,8 @@ export function LoginPage({ locale }: { locale: Locale }) {
                     ? `स्वागत है, ${firstName || 'श्रोता'}!`
                     : `Welcome, ${firstName || 'Listener'}!`
                   : isHi
-                  ? 'लॉगिन सफल रहा!'
-                  : 'Welcome Back!'}
+                    ? 'लॉगिन सफल रहा!'
+                    : 'Welcome Back!'}
               </h3>
               <p className="max-w-sm text-sm text-muted-foreground">
                 {isHi
@@ -185,6 +220,15 @@ export function LoginPage({ locale }: { locale: Locale }) {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
+              {errorMessage && (
+                <div
+                  role="alert"
+                  className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-500"
+                >
+                  {errorMessage}
+                </div>
+              )}
+
               {/* 1. FIRST NAME & LAST NAME (in Create Mode) */}
               {tab === 'create' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -342,8 +386,8 @@ export function LoginPage({ locale }: { locale: Locale }) {
                               ? '✓ मैच'
                               : '✓ Matches'
                             : isHi
-                            ? '✗ मिसमैच'
-                            : '✗ Mismatch'}
+                              ? '✗ मिसमैच'
+                              : '✗ Mismatch'}
                         </span>
                       )}
                     </div>
@@ -408,8 +452,8 @@ export function LoginPage({ locale }: { locale: Locale }) {
                     ? 'खाता बनाएँ'
                     : 'Create Account'
                   : isHi
-                  ? 'अकाउंट में लॉगिन करें'
-                  : 'Sign In to Account'}
+                    ? 'अकाउंट में लॉगिन करें'
+                    : 'Sign In to Account'}
               </Button>
 
               {/* 7. SOCIAL SIGN UP DIVIDER */}
@@ -421,28 +465,41 @@ export function LoginPage({ locale }: { locale: Locale }) {
 
               <button
                 type="button"
-                onClick={() => setSubmitted(true)}
-                className="flex h-11 w-full items-center justify-center gap-2.5 rounded-xl border border-border/80 bg-background hover:bg-muted font-bold text-xs text-foreground transition-all cursor-pointer shadow-sm"
+                onClick={handleGoogle}
+                disabled={googleLoading}
+                className="flex h-11 w-full items-center justify-center gap-2.5 rounded-xl border border-border/80 bg-background hover:bg-muted font-bold text-xs text-foreground transition-all cursor-pointer shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <svg className="size-4 shrink-0" viewBox="0 0 24 24">
-                  <path
-                    fill="#4285F4"
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                  />
-                </svg>
-                <span>{isHi ? 'Google के साथ साइन इन करें' : 'Continue with Google'}</span>
+                {googleLoading ? (
+                  <Loader2 className="size-4 shrink-0 animate-spin" />
+                ) : (
+                  <svg className="size-4 shrink-0" viewBox="0 0 24 24">
+                    <path
+                      fill="#4285F4"
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                    />
+                    <path
+                      fill="#EA4335"
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                    />
+                  </svg>
+                )}
+                <span>
+                  {googleLoading
+                    ? isHi
+                      ? 'साइन इन हो रहा है...'
+                      : 'Signing in...'
+                    : isHi
+                      ? 'Google के साथ साइन इन करें'
+                      : 'Continue with Google'}
+                </span>
               </button>
 
               {/* 8. SWITCH TAB HELPER LINK */}
