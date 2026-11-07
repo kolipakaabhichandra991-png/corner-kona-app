@@ -16,7 +16,7 @@ function generateSlug(text: string): string {
 
 export async function GET() {
   try {
-    const store = loadStore()
+    const store = await loadStore()
     return NextResponse.json({
       success: true,
       stats: {
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
         views: views || '1.0K',
       }
 
-      addShort(newShort)
+      await addShort(newShort)
       revalidatePath('/', 'layout')
       return NextResponse.json({ success: true, item: newShort, message: 'Short video posted successfully!' })
     }
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
         formats: [{ format: 'article', href: `/stories/${slug}` }],
       }
 
-      addStory(newStory)
+      await addStory(newStory)
       revalidatePath('/', 'layout')
       return NextResponse.json({ success: true, item: newStory, message: 'Story posted successfully!' })
     }
@@ -139,7 +139,7 @@ export async function POST(request: Request) {
         ],
       }
 
-      addEpisode(newEpisode)
+      await addEpisode(newEpisode)
       revalidatePath('/', 'layout')
       return NextResponse.json({ success: true, item: newEpisode, message: 'Podcast/Episode posted successfully!' })
     }
@@ -161,9 +161,9 @@ export async function DELETE(request: Request) {
     }
 
     let success = false
-    if (type === 'short') success = deleteShort(id)
-    else if (type === 'story') success = deleteStory(id)
-    else if (type === 'episode') success = deleteEpisode(id)
+    if (type === 'short') success = await deleteShort(id)
+    else if (type === 'story') success = await deleteStory(id)
+    else if (type === 'episode') success = await deleteEpisode(id)
 
     if (success) {
       revalidatePath('/', 'layout')
