@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "create-admin": "pnpm dlx tsx --env-file=.env.local scripts/create-admin.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

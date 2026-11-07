@@ -1,7 +1,7 @@
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { loadStore } from '@/lib/content/store'
 import { AdminDashboard } from '@/components/admin/admin-dashboard'
+import { getAdminSession } from '@/lib/auth/admin'
 
 export const metadata = {
   title: 'Admin Portal Console | Corner Kona',
@@ -9,19 +9,9 @@ export const metadata = {
 }
 
 export default async function AdminDashboardRoute() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('corner_kona_admin_token')?.value
+  const session = await getAdminSession()
 
-  if (!token) {
-    redirect('/admin/login')
-  }
-
-  try {
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf8'))
-    if (!decoded || !decoded.user) {
-      redirect('/admin/login')
-    }
-  } catch {
+  if (!session) {
     redirect('/admin/login')
   }
 

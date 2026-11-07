@@ -1,6 +1,6 @@
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { AdminLogin } from '@/components/admin/admin-login'
+import { getAdminSession } from '@/lib/auth/admin'
 
 export const metadata = {
   title: 'Admin Portal Login | Corner Kona',
@@ -8,18 +8,10 @@ export const metadata = {
 }
 
 export default async function AdminLoginRoute() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('corner_kona_admin_token')?.value
+  const session = await getAdminSession()
 
-  if (token) {
-    try {
-      const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf8'))
-      if (decoded && decoded.user) {
-        redirect('/admin')
-      }
-    } catch {
-      // invalid token, show login
-    }
+  if (session) {
+    redirect('/admin')
   }
 
   return <AdminLogin />
