@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL_UNPOOLED")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model Category {
@@ -174,9 +173,13 @@ model ListeningProgress {
 }
 
 model NewsletterSubscriber {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id                  String   @id @default(cuid())
+  email               String   @unique
+  verified            Boolean  @default(false)
+  verificationToken   String?  @unique
+  verificationExpiresAt DateTime?
+  optIn               Boolean  @default(false)
+  createdAt           DateTime @default(now())
 }
 
 // A logged-in user's like on a comment (one per user per comment).
