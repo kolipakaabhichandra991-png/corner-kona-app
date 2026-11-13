@@ -1,10 +1,23 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import bcrypt from 'bcryptjs'
+import { createAdminSession, clearAdminSession, getAdminSession } from '@/lib/auth/admin'
 
-// Admin credentials
-const VALID_USERS: Record<string, string> = {
-  admin: 'admin123',
-  cornerkona: 'kona@2026',
+/**
+ * Loads admin credentials from ADMIN_CREDENTIALS env var.
+ * Format: "username1:hash1,username2:hash2"
+ * Falls back to empty map if the variable is absent (login will always fail).
+ */
+function loadAdminCredentials(): Map<string, string> {
+  const raw = process.env.ADMIN_CREDENTIALS ?? ''
+  const map = new Map<string, string>()
+  for (const entry of raw.split(',')) {
+    const colonIdx = entry.indexOf(':')
+    if (colonIdx < 1) continue
+    const user = entry.slice(0, colonIdx).trim().toLowerCase()
+    const hash = entry.slice(colonIdx + 1).trim()
+    if (user && hash) map.set(user, hash)
+  }
+  return map
 }
 
 export async function POST(request: Request) {
@@ -12,67 +25,55 @@ export async function POST(request: Request) {
     const { username, password } = await request.json()
 
     if (!username || !password) {
-      return NextResponse.json({ success: false, error: 'Username and password are required' }, { status: 400 })
+      return NextResponse.json(
+        { success: false, error: 'Username and password are required' },
+        { status: 400 },
+      )
     }
 
-    const expectedPassword = VALID_USERS[username.trim().toLowerCase()]
-    if (!expectedPassword || expectedPassword !== password.trim()) {
-      return NextResponse.json({ success: false, error: 'Invalid username or password' }, { status: 401 })
+    const credentials = loadAdminCredentials()
+    const normalizedUser = (username as string).trim().toLowerCase()
+    const hash = credentials.get(normalizedUser)
+
+    // Always run bcrypt compare to avoid timing attacks even when user not found
+    const isValid = hash ? await bcrypt.compare((password as string).trim(), hash) : false
+
+    if (!hash || !isValid) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid username or password' },
+        { status: 401 },
+      )
     }
 
-    // Set cookie
-    const cookieStore = await cookies()
-    const sessionToken = Buffer.from(
-      JSON.stringify({
-        user: username,
-        role: 'Super Admin',
-        loginTime: Date.now(),
-      }),
-    ).toString('base64')
-
-    cookieStore.set('corner_kona_admin_token', sessionToken, {
-      path: '/',
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      sameSite: 'lax',
-    })
+    await createAdminSession(normalizedUser)
 
     return NextResponse.json({
       success: true,
       user: {
-        username,
+        username: normalizedUser,
         role: 'Super Admin',
         name: 'Corner Kona Administrator',
       },
     })
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message || 'Authentication error' }, { status: 500 })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Authentication error'
+    return NextResponse.json({ success: false, error: message }, { status: 500 })
   }
 }
 
 export async function GET() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('corner_kona_admin_token')?.value
-
-  if (!token) {
+  const session = await getAdminSession()
+  if (!session) {
     return NextResponse.json({ authenticated: false })
   }
-
-  try {
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf8'))
-    return NextResponse.json({
-      authenticated: true,
-      user: decoded.user,
-      role: decoded.role,
-    })
-  } catch {
-    return NextResponse.json({ authenticated: false })
-  }
+  return NextResponse.json({
+    authenticated: true,
+    user: session.user,
+    role: session.role,
+  })
 }
 
 export async function DELETE() {
-  const cookieStore = await cookies()
-  cookieStore.delete('corner_kona_admin_token')
+  await clearAdminSession()
   return NextResponse.json({ success: true, message: 'Logged out successfully' })
 }

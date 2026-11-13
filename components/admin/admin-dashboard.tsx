@@ -64,7 +64,7 @@ export function AdminDashboard({
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'short' | 'story' | 'episode' | 'manage' | 'comments' | 'analytics'>('short')
 
-  // Comments Moderation State
+  // Real comments moderation backed by /api/admin/comments.
   interface ModeratedComment {
     id: string
     author: string
@@ -74,65 +74,70 @@ export function AdminDashboard({
     status: 'approved' | 'pending' | 'reported' | 'spam'
     likes: number
   }
-
-  const [moderationComments, setModerationComments] = useState<ModeratedComment[]>([
-    {
-      id: 'mod-1',
-      author: 'Aaditya Verma',
-      content: 'This perspective is truly eye-opening! Corner Kona’s narrative storytelling is leaps ahead.',
-      contentTitle: 'From Gully to World Cup',
-      createdAt: '2 hours ago',
-      status: 'approved',
-      likes: 24,
-    },
-    {
-      id: 'mod-2',
-      author: 'Anonymous Spammer',
-      content: 'Click here for free crypto giveaway at fake-crypto-link.com/win',
-      contentTitle: 'Behind the Curtain: 90 Days',
-      createdAt: '1 hour ago',
-      status: 'reported',
-      likes: 0,
-    },
-    {
-      id: 'mod-3',
-      author: 'Kabir Mehta',
-      content: 'Structuring deep research into bites that resonate with Gen-Z is exactly what was needed.',
-      contentTitle: 'Chip Wars: The World’s Most Expensive Battle',
-      createdAt: '4 hours ago',
-      status: 'approved',
-      likes: 19,
-    },
-    {
-      id: 'mod-4',
-      author: 'PromoBot',
-      content: 'Buy social media followers cheap! Fast delivery guaranteed 100%!',
-      contentTitle: 'Antar Yatra: Inner Peace Special',
-      createdAt: '30 mins ago',
-      status: 'spam',
-      likes: 0,
-    },
-  ])
+  const [moderationComments, setModerationComments] = useState<ModeratedComment[]>([])
   const [commentFilter, setCommentFilter] = useState<'all' | 'reported' | 'approved' | 'spam'>('all')
+  const [commentsLoading, setCommentsLoading] = useState(false)
+  const [commentsError, setCommentsError] = useState('')
+  const [commentBusyId, setCommentBusyId] = useState<string | null>(null)
 
-  const handleApproveComment = (id: string) => {
-    setModerationComments((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, status: 'approved' } : c))
-    )
-    setStatusMessage({ type: 'success', text: 'टिप्पणी स्वीकृत कर दी गई (Comment approved)' })
+  const refreshModerationComments = async () => {
+    setCommentsLoading(true)
+    setCommentsError('')
+    try {
+      const response = await fetch('/api/admin/comments?status=all', { cache: 'no-store' })
+      const result = await response.json()
+      if (!response.ok || !Array.isArray(result.data)) {
+        throw new Error(result.error || 'Unable to load comments')
+      }
+      setModerationComments(result.data.filter((c: { status: string }) => c.status !== 'deleted').map((c: {
+        id: string; authorName: string; body: string; contentId: string;
+        createdAt: string; status: string; likes: number
+      }) => ({
+        id: c.id,
+        author: c.authorName,
+        content: c.body,
+        contentTitle: c.contentId,
+        createdAt: new Date(c.createdAt).toLocaleString(),
+        status: c.status as ModeratedComment['status'],
+        likes: c.likes,
+      })))
+    } catch (error) {
+      setCommentsError(error instanceof Error ? error.message : 'Unable to load comments')
+    } finally {
+      setCommentsLoading(false)
+    }
   }
 
-  const handleMarkSpam = (id: string) => {
-    setModerationComments((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, status: 'spam' } : c))
-    )
-    setStatusMessage({ type: 'success', text: 'टिप्पणी को स्पैम चिन्हित किया गया (Marked as spam)' })
-  }
+  useEffect(() => {
+    if (activeTab === 'comments') void refreshModerationComments()
+  }, [activeTab])
 
-  const handleDeleteComment = (id: string) => {
-    setModerationComments((prev) => prev.filter((c) => c.id !== id))
-    setStatusMessage({ type: 'success', text: 'टिप्पणी हटा दी गई (Comment deleted)' })
+  const moderateComment = async (id: string, action: 'approve' | 'spam' | 'delete') => {
+    if (commentBusyId) return
+    if (action === 'delete' && !window.confirm('Delete this comment?')) return
+    setCommentBusyId(id)
+    setCommentsError('')
+    try {
+      const response = await fetch('/api/admin/comments/' + encodeURIComponent(id), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Moderation failed')
+      await refreshModerationComments()
+      setStatusMessage({ type: 'success', text: 'Comment updated successfully' })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Moderation failed'
+      setCommentsError(message)
+      setStatusMessage({ type: 'error', text: message })
+    } finally {
+      setCommentBusyId(null)
+    }
   }
+  const handleApproveComment = (id: string) => { void moderateComment(id, 'approve') }
+  const handleMarkSpam = (id: string) => { void moderateComment(id, 'spam') }
+  const handleDeleteComment = (id: string) => { void moderateComment(id, 'delete') }
   const [manageFilter, setManageFilter] = useState<'all' | 'short' | 'story' | 'episode'>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -1123,7 +1128,16 @@ export function AdminDashboard({
             </div>
           </div>
 
+                    {commentsError && <p role="alert" className="text-sm text-rose-400">{commentsError}</p>}
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-xs text-muted-foreground">{commentsLoading ? 'Loading comments...' : 'Latest 200 comments'}</span>
+            <button type="button" onClick={() => void refreshModerationComments()} disabled={commentsLoading}
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-bold disabled:opacity-50">Refresh comments</button>
+          </div>
           <div className="space-y-3">
+            {!commentsLoading && !commentsError && moderationComments.filter(c => commentFilter === 'all' || c.status === commentFilter).length === 0 && (
+              <p className="text-sm text-muted-foreground">No comments found.</p>
+            )}
             {moderationComments
               .filter(c => commentFilter === 'all' || c.status === commentFilter)
               .map((comment) => (
@@ -1167,6 +1181,7 @@ export function AdminDashboard({
                       <button
                         type="button"
                         onClick={() => handleApproveComment(comment.id)}
+                        disabled={commentBusyId !== null}
                         className="rounded-xl bg-emerald-600/15 border border-emerald-600/30 px-3 py-1.5 text-xs font-bold text-emerald-400 hover:bg-emerald-600/25 transition-colors"
                       >
                         स्वीकृत करें
@@ -1176,6 +1191,7 @@ export function AdminDashboard({
                       <button
                         type="button"
                         onClick={() => handleMarkSpam(comment.id)}
+                        disabled={commentBusyId !== null}
                         className="rounded-xl bg-amber-500/15 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-400 hover:bg-amber-500/25 transition-colors"
                       >
                         स्पैम
@@ -1184,6 +1200,7 @@ export function AdminDashboard({
                     <button
                       type="button"
                       onClick={() => handleDeleteComment(comment.id)}
+                        disabled={commentBusyId !== null}
                       className="rounded-xl bg-rose-500/15 border border-rose-500/30 px-3 py-1.5 text-xs font-bold text-rose-400 hover:bg-rose-500/25 transition-colors"
                     >
                       हटाएँ

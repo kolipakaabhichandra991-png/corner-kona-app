@@ -113,163 +113,107 @@ export function CommentsSection({ contentId, contentTitle, locale, labels }: Com
   const [sortBy, setSortBy] = useState<'top' | 'newest'>('top')
   const [reportedIds, setReportedIds] = useState<Set<string>>(new Set())
 
-  // Load comments from localStorage or initialize with seed data
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(`ck_comments_${contentId}`)
-      if (stored) {
-        setComments(JSON.parse(stored))
-      } else {
-        const seeds = getInitialSeeds(contentId, locale)
-        setComments(seeds)
-        localStorage.setItem(`ck_comments_${contentId}`, JSON.stringify(seeds))
-      }
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [loadingComments, setLoadingComments] = useState(true)
 
-      // Check if user has saved profile name
-      const user = localStorage.getItem('ck_auth_user')
-      if (user) {
-        try {
-          const parsed = JSON.parse(user)
-          if (parsed.name) setAuthorName(parsed.name)
-        } catch {
-          // ignore
-        }
-      }
-    } catch {
-      setComments(getInitialSeeds(contentId, locale))
+  const readError = async (response: Response) => {
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      if (response.status === 401) throw new Error(locale === 'hi' ? 'कमेंट करने के लिए लॉगिन करें।' : 'Please sign in to comment, like, or report.')
+      throw new Error(data.error || 'Request failed')
     }
-  }, [contentId, locale])
+    return data
+  }
 
-  // Save to localStorage & sync with Admin moderation store
-  const persistComments = (updated: CommentItem[]) => {
-    setComments(updated)
+  const normalize = (item: any): CommentItem => ({
+    id: String(item.id),
+    contentId: String(item.contentId || contentId),
+    author: String(item.authorName || item.author || 'Corner Reader'),
+    avatarBg: AVATAR_GRADIENTS[String(item.id).length % AVATAR_GRADIENTS.length],
+    content: String(item.body || item.content || ''),
+    createdAt: item.createdAt ? new Date(item.createdAt).toLocaleString(locale === 'hi' ? 'hi-IN' : 'en-IN') : '',
+    likes: Number(item.likes || 0),
+    isLiked: Boolean(item.liked ?? item.isLiked),
+    isReported: Boolean(item.reportedByMe ?? item.isReported),
+    isVerified: false,
+    replies: Array.isArray(item.replies) ? item.replies.map(normalize) : [],
+  })
+
+  const reload = async () => {
+    const response = await fetch('/api/v1/comments?contentId=' + encodeURIComponent(contentId) + '&sort=' + sortBy, { cache: 'no-store' })
+    const data = await readError(response)
+    setComments((Array.isArray(data.data) ? data.data : []).map(normalize))
+  }
+
+  useEffect(() => {
+    let cancelled = false
+    setLoadingComments(true)
+    setError('')
+    Promise.all([
+      fetch('/api/v1/comments?contentId=' + encodeURIComponent(contentId) + '&sort=' + sortBy, { cache: 'no-store' }).then(async r => {
+        const d = await readError(r)
+        return (Array.isArray(d.data) ? d.data : []).map(normalize)
+      }),
+      fetch('/api/auth/me', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([rows, user]) => {
+      if (cancelled) return
+      setComments(rows)
+      const me = user?.user || user?.data || user
+      if (me?.name) setAuthorName(me.name)
+    }).catch(e => { if (!cancelled) setError(e.message || 'Could not load comments') })
+      .finally(() => { if (!cancelled) setLoadingComments(false) })
+    return () => { cancelled = true }
+  }, [contentId, sortBy])
+
+  const perform = async (url: string, body?: object) => {
+    if (busy) return
+    setBusy(true)
+    setError('')
     try {
-      localStorage.setItem(`ck_comments_${contentId}`, JSON.stringify(updated))
-      
-      // Update global admin moderation collection
-      const allCommentsRaw = localStorage.getItem('ck_moderation_queue') || '[]'
-      const allComments: CommentItem[] = JSON.parse(allCommentsRaw)
-      
-      // Flatten current list
-      const flat: CommentItem[] = []
-      updated.forEach((c) => {
-        flat.push(c)
-        if (c.replies) flat.push(...c.replies)
+      const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body || {}),
       })
-      
-      const filtered = allComments.filter((c) => c.contentId !== contentId)
-      localStorage.setItem('ck_moderation_queue', JSON.stringify([...filtered, ...flat]))
-    } catch {
-      // LocalStorage fallback
+      await readError(response)
+      await reload()
+      return true
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Request failed')
+      return false
+    } finally {
+      setBusy(false)
     }
   }
 
-  const handleAddComment = (e: React.FormEvent) => {
+  const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newCommentText.trim()) return
-
-    const name = authorName.trim() || (locale === 'hi' ? 'पाठक' : 'Corner Reader')
-    const randomGrad = AVATAR_GRADIENTS[Math.floor(Math.random() * AVATAR_GRADIENTS.length)]
-
-    const newComment: CommentItem = {
-      id: `c_${Date.now()}`,
-      contentId,
-      author: name,
-      avatarBg: randomGrad,
-      content: newCommentText.trim(),
-      createdAt: locale === 'hi' ? 'अभी' : 'Just now',
-      likes: 1,
-      isLiked: true,
-      isVerified: false,
-      replies: [],
-    }
-
-    const updated = [newComment, ...comments]
-    persistComments(updated)
-    setNewCommentText('')
+    if (await perform('/api/v1/comments', { contentId, body: newCommentText.trim() })) setNewCommentText('')
   }
 
-  const handleAddReply = (parentId: string) => {
+  const handleAddReply = async (parentId: string) => {
     if (!replyText.trim()) return
-
-    const name = authorName.trim() || (locale === 'hi' ? 'पाठक' : 'Corner Reader')
-    const randomGrad = AVATAR_GRADIENTS[Math.floor(Math.random() * AVATAR_GRADIENTS.length)]
-
-    const newReply: CommentItem = {
-      id: `r_${Date.now()}`,
-      contentId,
-      author: name,
-      avatarBg: randomGrad,
-      content: replyText.trim(),
-      createdAt: locale === 'hi' ? 'अभी' : 'Just now',
-      likes: 1,
-      isLiked: true,
-      isVerified: false,
-    }
-
-    const updated = comments.map((c) => {
-      if (c.id === parentId) {
-        return {
-          ...c,
-          replies: [...(c.replies || []), newReply],
-        }
-      }
-      return c
-    })
-
-    persistComments(updated)
-    setReplyText('')
-    setReplyingToId(null)
-  }
-
-  const handleToggleLike = (commentId: string, isReply = false, parentId?: string) => {
-    const updated = comments.map((c) => {
-      if (!isReply && c.id === commentId) {
-        const currentlyLiked = !!c.isLiked
-        return {
-          ...c,
-          isLiked: !currentlyLiked,
-          likes: currentlyLiked ? c.likes - 1 : c.likes + 1,
-        }
-      }
-      if (isReply && c.id === parentId && c.replies) {
-        return {
-          ...c,
-          replies: c.replies.map((r) => {
-            if (r.id === commentId) {
-              const currentlyLiked = !!r.isLiked
-              return {
-                ...r,
-                isLiked: !currentlyLiked,
-                likes: currentlyLiked ? r.likes - 1 : r.likes + 1,
-              }
-            }
-            return r
-          }),
-        }
-      }
-      return c
-    })
-    persistComments(updated)
-  }
-
-  const handleReport = (id: string) => {
-    setReportedIds((prev) => new Set(prev).add(id))
-    try {
-      const reports = JSON.parse(localStorage.getItem('ck_reported_items') || '[]')
-      reports.push({ id, contentId, contentTitle, reportedAt: new Date().toISOString() })
-      localStorage.setItem('ck_reported_items', JSON.stringify(reports))
-    } catch {
-      // ignore
+    if (await perform('/api/v1/comments', { contentId, body: replyText.trim(), parentId })) {
+      setReplyText('')
+      setReplyingToId(null)
     }
   }
 
-  const totalCommentCount = comments.reduce((acc, c) => acc + 1 + (c.replies ? c.replies.length : 0), 0)
+  const handleToggleLike = async (id: string, _isReply = false, _parentId?: string) => {
+    await perform('/api/v1/comments/' + encodeURIComponent(id) + '/like')
+  }
 
-  const sortedComments = [...comments].sort((a, b) => {
-    if (sortBy === 'top') return b.likes - a.likes
-    return 0 // chronological from array
-  })
+  const handleReport = async (id: string) => {
+    if (await perform('/api/v1/comments/' + encodeURIComponent(id) + '/report')) {
+      setReportedIds(prev => new Set(prev).add(id))
+    }
+  }
+
+  const totalCommentCount = comments.reduce((count, c) => count + 1 + (c.replies?.length || 0), 0)
+  const sortedComments = [...comments].sort((a, b) => sortBy === 'top' ? b.likes - a.likes : 0)
 
   return (
     <section
@@ -319,6 +263,8 @@ export function CommentsSection({ contentId, contentTitle, locale, labels }: Com
         </div>
       </div>
 
+      {error && <p role="alert" className="mt-4 text-sm text-red-500">{error}</p>}
+      {loadingComments && <p className="mt-4 text-sm text-muted-foreground">Loading comments...</p>}
       {/* Main Comment Input Box */}
       <form onSubmit={handleAddComment} className="mt-6 flex flex-col gap-3">
         <div className="flex items-center gap-3">
@@ -328,7 +274,7 @@ export function CommentsSection({ contentId, contentTitle, locale, labels }: Com
           <input
             type="text"
             value={authorName}
-            onChange={(e) => setAuthorName(e.target.value)}
+            readOnly
             placeholder={labels.yourName}
             className="w-full max-w-xs rounded-xl border border-input bg-background px-3 py-1.5 text-xs font-medium text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
@@ -345,7 +291,7 @@ export function CommentsSection({ contentId, contentTitle, locale, labels }: Com
           <div className="mt-2 flex items-center justify-end">
             <button
               type="submit"
-              disabled={!newCommentText.trim()}
+              disabled={busy || !newCommentText.trim()}
               className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2 text-xs font-extrabold text-primary-foreground shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Send className="size-3.5" />
@@ -358,7 +304,7 @@ export function CommentsSection({ contentId, contentTitle, locale, labels }: Com
       {/* Comment List */}
       <div className="mt-8 space-y-6">
         {sortedComments.map((comment) => {
-          const isReported = reportedIds.has(comment.id)
+          const isReported = reportedIds.has(comment.id) || Boolean(comment.isReported)
           return (
             <div key={comment.id} className="group relative rounded-2xl border border-border/40 bg-muted/20 p-4 transition-colors hover:bg-muted/30">
               <div className="flex items-start gap-3">
@@ -414,7 +360,7 @@ export function CommentsSection({ contentId, contentTitle, locale, labels }: Com
                     <button
                       type="button"
                       onClick={() => handleReport(comment.id)}
-                      disabled={isReported}
+                      disabled={busy || isReported}
                       className={cn(
                         'inline-flex items-center gap-1 transition-colors ml-auto',
                         isReported ? 'text-amber-500 cursor-default' : 'hover:text-destructive',
@@ -458,7 +404,7 @@ export function CommentsSection({ contentId, contentTitle, locale, labels }: Com
                         <button
                           type="button"
                           onClick={() => handleAddReply(comment.id)}
-                          disabled={!replyText.trim()}
+                          disabled={busy || !replyText.trim()}
                           className="rounded-full bg-primary px-4 py-1 text-xs font-bold text-primary-foreground hover:opacity-90 disabled:opacity-40"
                         >
                           {labels.sendReply}
@@ -471,7 +417,7 @@ export function CommentsSection({ contentId, contentTitle, locale, labels }: Com
                   {comment.replies && comment.replies.length > 0 && (
                     <div className="mt-4 space-y-3 pl-4 sm:pl-6 border-l-2 border-primary/20">
                       {comment.replies.map((reply) => {
-                        const replyReported = reportedIds.has(reply.id)
+                        const replyReported = reportedIds.has(reply.id) || Boolean(reply.isReported)
                         return (
                           <div key={reply.id} className="rounded-xl bg-background/50 p-3 border border-border/30">
                             <div className="flex items-start gap-2.5">
@@ -506,7 +452,7 @@ export function CommentsSection({ contentId, contentTitle, locale, labels }: Com
                                   <button
                                     type="button"
                                     onClick={() => handleReport(reply.id)}
-                                    disabled={replyReported}
+                                    disabled={busy || replyReported}
                                     className={cn(
                                       'inline-flex items-center gap-1 transition-colors ml-auto',
                                       replyReported ? 'text-amber-500 cursor-default' : 'hover:text-destructive',

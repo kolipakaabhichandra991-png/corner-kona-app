@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { addEpisode, addShort, addStory, deleteEpisode, deleteShort, deleteStory, loadStore } from '@/lib/content/store'
 import type { Episode, Short, Story } from '@/lib/content/types'
+import { getAdminSession } from '@/lib/auth/admin'
 
 function generateSlug(text: string): string {
   return (
@@ -16,6 +17,9 @@ function generateSlug(text: string): string {
 
 export async function GET() {
   try {
+    const admin = await getAdminSession()
+    if (!admin) return NextResponse.json({ error: 'admin_required' }, { status: 401 })
+
     const store = await loadStore()
     return NextResponse.json({
       success: true,
@@ -37,6 +41,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const admin = await getAdminSession()
+    if (!admin) return NextResponse.json({ error: 'admin_required' }, { status: 401 })
+
     const body = await request.json()
     const { type, data } = body
 
@@ -152,6 +159,9 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const admin = await getAdminSession()
+    if (!admin) return NextResponse.json({ error: 'admin_required' }, { status: 401 })
+
     const { searchParams } = new URL(request.url)
     const type = searchParams.get('type')
     const id = searchParams.get('id')

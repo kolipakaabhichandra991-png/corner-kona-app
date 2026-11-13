@@ -216,3 +216,26 @@ model ModerationAction {
 
   @@index([commentId])
 }
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  email        String   @unique
+  phone        String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("users")
+}
+
+model LoginAttempt {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String?
+  ip        String
+  type      String   @default("login")
+  createdAt DateTime @default(now())
+
+  @@index([email, type, createdAt])
+  @@index([ip, type, createdAt])
+  @@map("login_attempts")
+}

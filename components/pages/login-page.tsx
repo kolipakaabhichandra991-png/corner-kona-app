@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -31,25 +31,87 @@ export function LoginPage({ locale }: { locale: Locale }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [agreeTerms, setAgreeTerms] = useState(true)
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [authError, setAuthError] = useState('')
+  useEffect(() => {
+  let active = true
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email) return
-    setSubmitted(true)
+  const restoreSession = async () => {
     try {
-      const fullName = firstName ? `${firstName} ${lastName}`.trim() : email.split('@')[0]
-      localStorage.setItem('ck_auth_user', JSON.stringify({
-        isSubscribed: true,
-        name: fullName,
-        email,
-        phone: phone || '+91 98765 43210',
-        plan: isHi ? 'वार्षिक संरक्षक पास' : 'Annual Patron Pass',
-        validUntil: isHi ? 'नवंबर 2027' : 'Nov 2027',
-      }))
+      const response = await fetch('/api/auth/me', {
+        credentials: 'same-origin',
+        cache: 'no-store',
+      })
+
+      if (!response.ok) return
+
+      const data = await response.json()
+
+      if (active && data.user) {
+        setEmail(data.user.email ?? '')
+        setTab('login')
+        setSubmitted(true)
+      }
     } catch {
-      // ignore
+      // Keep the login form available if session checking fails.
     }
   }
+
+  void restoreSession()
+
+  return () => {
+    active = false
+  }
+}, [])
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setAuthError('')
+
+  if (tab === 'create' && password !== confirmPassword) {
+    setAuthError('Passwords do not match')
+    return
+  }
+
+  setLoading(true)
+
+  try {
+    const response = await fetch(
+      tab === 'create' ? '/api/auth/register' : '/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify(
+          tab === 'create'
+            ? {
+                name: `${firstName} ${lastName}`.trim(),
+                email,
+                phone,
+                password,
+                confirmPassword,
+              }
+            : { email, password }
+        ),
+      }
+    )
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Authentication failed')
+    }
+
+    setSubmitted(true)
+  } catch (error) {
+    setAuthError(
+      error instanceof Error ? error.message : 'Something went wrong'
+    )
+  } finally {
+    setLoading(false)
+  }
+}
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-8 md:px-6 md:py-14 animate-rise">
@@ -175,7 +237,7 @@ export function LoginPage({ locale }: { locale: Locale }) {
               <p className="max-w-sm text-sm text-muted-foreground">
                 {isHi
                   ? `पुष्टि लिंक आपके ईमेल (${email}) पर भेज दिया गया है।`
-                  : `A confirmation link has been sent to ${email}.`}
+                  : `Your account is ready: ${email}.`}
               </p>
               <Link href={localePath(locale)}>
                 <Button className="mt-2 rounded-full font-bold">
@@ -184,7 +246,8 @@ export function LoginPage({ locale }: { locale: Locale }) {
               </Link>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
+            <form onSubmit={handleSubmit} noValidate className="mt-6 flex flex-col gap-4">
+              {authError && <p role="alert" className="text-sm text-red-500">{authError}</p>}
               {/* 1. FIRST NAME & LAST NAME (in Create Mode) */}
               {tab === 'create' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -279,7 +342,7 @@ export function LoginPage({ locale }: { locale: Locale }) {
               )}
 
               {/* 4. PASSWORD & CONFIRM PASSWORD */}
-              <div className={cn('grid gap-3', tab === 'create' ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1')}>
+              <div className={cn('grid gap-3 items-end', tab === 'create' ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1')}>
                 {/* Password */}
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
@@ -400,6 +463,7 @@ export function LoginPage({ locale }: { locale: Locale }) {
               {/* 6. SUBMIT BUTTON */}
               <Button
                 type="submit"
+                disabled={loading}
                 size="lg"
                 className="mt-1 h-12 w-full rounded-xl font-bold text-white shadow-lg bg-gradient-to-r from-[#9333EA] to-[#0EA5E9] hover:opacity-95 shadow-purple-500/25 active:scale-98 transition-all cursor-pointer"
               >
